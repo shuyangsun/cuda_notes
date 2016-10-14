@@ -30,6 +30,10 @@ ___
 	* *Bandwidth*: the amount of data that can be processed per unit of time, commonly expressed as megabytes/sec or gigabytes/sec.
 	* *Throughput*: the amount of operations that can be processed per unit of time, commonly expressed as *gflops*.
 
+* A multi-node system is often referred to as *clusters*.
+* Single Instruction Multiple Thread (**SIMT**): NVIDIA's term for the combination of all four main architectures.
+
+
 ```cuda
 /* A simple CUDA program */
 
