@@ -4,9 +4,12 @@ ___
 
 ## 1. Introduction
 * A *data dependency* occurs when an instruction consumes data produced by a preceding instruction.
+* Two fundamental types of parallelism:
+	1. Task parallelism: when there are many data items that can be operated on at the same time. Focuses on distributing functions across multiple cores.
+	2. Data parallelism (what CUDA focuses on): when there are many data items that can be operated on at the same time. Focuses on distributing the data across multiple cores.
 
 ```cuda
-// A simple cuda program
+// A simple CUDA program
 #include <cstdio>
 
 __global__ void helloFromGPU() {
@@ -16,7 +19,7 @@ __global__ void helloFromGPU() {
 
 int main(int argc, const char* argv[]) {
 
-	// Tripple angle brackets mark a call from the host thread to the code on the device side.
+	// Triple angle brackets mark a call from the host thread to the code on the device side.
 	// A kernel's executed by an array of threads and all threads run the same code.
 
 	helloFromGPU<<<1, 5>>>(); // Call helloFromGPU 5 times on GPU
