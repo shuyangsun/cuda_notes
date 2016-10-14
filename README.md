@@ -60,7 +60,6 @@ __global__ void helloFromGPU() {
 	printf("Hello from GPU!\n");
 }
 
-
 int main(int argc, const char* argv[]) {
 
 	// Triple angle brackets mark a call from the host thread to the code on the device side.
@@ -74,6 +73,14 @@ int main(int argc, const char* argv[]) {
 	return 0;
 }
 
-// Compile with "nvcc -arch sm_61 hello.cu -o hello"
+// Compile with "nvcc -arch sm_61 hello.cu -o hello".
 // "-arch sm_<computing capability>" is to compile for a specific architecture.
 ```
+* **CUDA Programing Structure**:
+	1. Allocate GPU memories.
+	2. Copy data from CPU memory to GPU memory.
+	3. Invoke the CUDA kernel to perform program-specific computation.
+	4. Copy data back from GPU memory to CPU memory.
+	5. Destroy GPU memories.
+
+
