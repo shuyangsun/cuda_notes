@@ -113,9 +113,17 @@ int main(int argc, const char* argv[]) {
 
 ### Managing Memory
 
-| Standard C Functions | CUDA C Functions         |
-| -------------------- | ------------------------ |
-| malloc               | cudaMalloc               |
-| memcpy               | cudaMemcpy               |
-| memset               | cudaMemset               |
-| free                 | cudaFree                 |
+| Standard C Functions | CUDA C Functions |
+| -------------------- | ---------------- |
+| malloc               | cudaMalloc       |
+| memcpy               | cudaMemcpy       |
+| memset               | cudaMemset       |
+| free                 | cudaFree         |
+
+
+| cudaMemcpyKind               |
+| ---------------------------- |
+| cudaMemcpyKindHostToHost     |
+| cudaMemcpyKindHostToDevice   |
+| cudaMemcpyKindDeviceToHost   |
+| cudaMemcpyKindDeviceToDevice |
