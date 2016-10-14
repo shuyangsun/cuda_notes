@@ -40,6 +40,7 @@ ___
 ### Paradigm of Heterogeneous Computing
 * CPU is preferred for small data size, low level of parallelism computing.
 * GPU is preferred for large data size, high level of parallelism computing.
+* GPU threads are extremely lightweight, context switch is almost instantaneous; in contrast, CPU threads are heavyweight, context switch is slow and expensive.
 
 ```cuda
 /* A simple CUDA program */
