@@ -15,6 +15,7 @@ ___
 	2. Data parallelism (what CUDA focuses on): when there are many data items that can be operated on at the same time. Focuses on distributing the data across multiple cores.
 
 * Even when a logical multi-dimensional view of data is used, it still maps to one-dimensional physical storage.
+* Two ways of partitioning memory: *block partition* and *cyclic partition*.
 * The way you organize threads has a significant effect on the program's performance.
 
 ### Computer Architecture
@@ -56,8 +57,9 @@ ___
 ```cuda
 #include <cstdio>
 
-__global__ void helloFromGPU() {
-	printf("Hello from GPU!\n");
+__global__ void helloFromGPU(void) {
+	char str[] {"Hello from GPU!"};
+	printf("%s (thread %d)\n", str, threadIdx.x);
 }
 
 int main(int argc, const char* argv[]) {
@@ -89,3 +91,16 @@ int main(int argc, const char* argv[]) {
 	* **Spatial locality**: the reused of data/resources within relatively close storage locations.
 * CUDA exposes both thread and memory hierarchy to programmer. (e.g., *shared memory*: software-managed cache)
 * Three key abstractions: a hierarchy of thread groups, a hierarchy of memory groups, and barrier synchronization.
+
+## 2. CUDA Programming Model
+
+### Introducing the CUDA Programming Model
+
+* CUDA special features:
+	* Organize threads on the GPU through a hierarchy structure
+	* Access memory on the GPU through a hierarchy structure
+
+* View parallel computing on different levels:
+	* Domain level
+	* Logic level
+	* Hardware level
