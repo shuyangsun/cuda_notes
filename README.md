@@ -37,6 +37,10 @@ ___
 * *Host code* runs on CPUs and *device code* runs on GPUs.
 * GPU is a type of *hardware accelerator*.
 
+### Paradigm of Heterogeneous Computing
+* CPU is preferred for small data size, low level of parallelism computing.
+* GPU is preferred for large data size, high level of parallelism computing.
+
 ```cuda
 /* A simple CUDA program */
 
