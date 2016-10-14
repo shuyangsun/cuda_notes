@@ -37,7 +37,7 @@ ___
 ### Heterogeneous Architecture
 
 * Each hardware performs tasks it does the best.
-* **Host code** runs on CPUs and **device code** runs on GPUs.
+* *Host code* runs on CPUs and *device code* runs on GPUs.
 * GPU is a type of *hardware accelerator*.
 
 ### Paradigm of Heterogeneous Computing
@@ -104,3 +104,18 @@ int main(int argc, const char* argv[]) {
 	* Domain level
 	* Logic level
 	* Hardware level
+
+### CUDA Programming Structure
+
+* **Host**: the CPU and its memory (host memory)
+* **Device**: the GPU and its memory (device memory)
+* A key component of the CUDA programming model is the kernel - the code that runs on the GPU device. As the developer, you can express a kernel as a sequential program. Behind the scenes, CUDA manages scheduling programmer-written kernels on GPU threads.
+
+### Managing Memory
+
+| Standard C Functions | CUDA C Functions |
+| -------------------- | ---------------- |
+| malloc               | cudaMalloc       |
+| memcpy               | cudaMemcpy       |
+| memset               | cudaMemset       |
+| free                 | cudaFree         |
