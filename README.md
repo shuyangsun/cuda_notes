@@ -8,8 +8,12 @@ ___
 	1. Task parallelism: when there are many data items that can be operated on at the same time. Focuses on distributing functions across multiple cores.
 	2. Data parallelism (what CUDA focuses on): when there are many data items that can be operated on at the same time. Focuses on distributing the data across multiple cores.
 
+* Even when a logical multi-dimensional view of data is used, it still maps to one-dimensional physical storage.
+* The way you organize threads has a significant effect on the program's performance.
+
 ```cuda
-// A simple CUDA program
+/* A simple CUDA program */
+
 #include <cstdio>
 
 __global__ void helloFromGPU() {
