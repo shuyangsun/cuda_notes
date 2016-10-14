@@ -73,4 +73,7 @@ int main(int argc, const char* argv[]) {
 
 	return 0;
 }
+
+// Compile with "nvcc -arch sm_61 hello.cu -o hello"
+// "-arch sm_<computing capability>" is to compile for a specific architecture.
 ```
