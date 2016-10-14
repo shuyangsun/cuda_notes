@@ -33,6 +33,9 @@ ___
 * A multi-node system is often referred to as *clusters*.
 * Single Instruction Multiple Thread (**SIMT**): NVIDIA's term for the combination of all four main architectures.
 
+### Heterogeneous Architecture
+* *Host code* runs on CPUs and *device code* runs on GPUs.
+* GPU is a type of *hardware accelerator*.
 
 ```cuda
 /* A simple CUDA program */
