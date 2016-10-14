@@ -119,3 +119,7 @@ int main(int argc, const char* argv[]) {
 | memcpy               | cudaMemcpy       |
 | memset               | cudaMemset       |
 | free                 | cudaFree         |
+| -------------------- | ---------------- |
+|                      | Memory Copy Functions |
+| -------------------- | ---------------- |
+|                      | cudaMemcpyHostToHost |
