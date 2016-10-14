@@ -119,7 +119,3 @@ int main(int argc, const char* argv[]) {
 | memcpy               | cudaMemcpy               |
 | memset               | cudaMemset               |
 | free                 | cudaFree                 |
-|                      | cudaMemcpyHostToHost     |
-|                      | cudaMemcpyHostToDevice   |
-|                      | cudaMemcpyDeviceToHost   |
-|                      | cudaMemcpyDeviceToDevice |
