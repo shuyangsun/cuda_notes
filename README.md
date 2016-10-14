@@ -45,7 +45,7 @@ ___
 
 ### CUDA: A Platform for Heterogeneous Computing
 * Runtime API vs. Driver API: no noticeable performance difference, cannot mix together.
-* The device code is written using CUDA C extended with keywords for labeling data-parallel functions, called **kernels**.
+* The device code is written using CUDA C extended with keywords for labeling data-parallel functions, called ** *kernels* **.
 
 ```cuda
 /* A simple CUDA program */
