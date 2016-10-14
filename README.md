@@ -34,6 +34,7 @@ ___
 * Single Instruction Multiple Thread (**SIMT**): NVIDIA's term for the combination of all four main architectures.
 
 ### Heterogeneous Architecture
+* Each hardware performs tasks it does the best.
 * *Host code* runs on CPUs and *device code* runs on GPUs.
 * GPU is a type of *hardware accelerator*.
 
@@ -41,6 +42,10 @@ ___
 * CPU is preferred for small data size, low level of parallelism computing.
 * GPU is preferred for large data size, high level of parallelism computing.
 * GPU threads are extremely lightweight, context switch is almost instantaneous; in contrast, CPU threads are heavyweight, context switch is slow and expensive.
+
+### CUDA: A Platform for Heterogeneous Computing
+* Runtime API vs. Driver API: no noticeable performance difference, cannot mix together.
+* The device code is written using CUDA C extended with keywords for labeling data-parallel functions, called **kernels**.
 
 ```cuda
 /* A simple CUDA program */
