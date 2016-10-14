@@ -87,3 +87,5 @@ int main(int argc, const char* argv[]) {
 * **Locality**: the reuse of data so as to reduce memory access latency.
 	* **Temporal locality**: the reused of data/resources within relatively small time durations.
 	* **Spatial locality**: the reused of data/resources within relatively close storage locations.
+* CUDA exposes both thread and memory hierarchy to programmer. (e.g., *shared memory*: software-managed cache)
+* Three key abstractions: a hierarchy of thread groups, a hierarchy of memory groups, and barrier synchronization.
