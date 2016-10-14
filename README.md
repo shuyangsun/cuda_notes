@@ -84,7 +84,7 @@ int main(int argc, const char* argv[]) {
 	5. Destroy GPU memories.
 
 ### Is CUDA Programming Difficult?
-* **Locality**: the reuse of data so as to reduce memory access latency.
+* *Locality*: the reuse of data so as to reduce memory access latency.
 	* **Temporal locality**: the reused of data/resources within relatively small time durations.
 	* **Spatial locality**: the reused of data/resources within relatively close storage locations.
 * CUDA exposes both thread and memory hierarchy to programmer. (e.g., *shared memory*: software-managed cache)
