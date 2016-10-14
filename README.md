@@ -24,7 +24,11 @@ ___
 	* Single Instruction Multiple Data (SIMD)
 	* Multiple Instruction Single Data (MISD)
 	* Multiple Instruction Multiple Data (MIMD)
-* 
+
+* On architectural level, they are trying to: decrease latency, increase bandwidth, increase throughput
+	* *Latency* is the time it takes for an operation to start and complete, and is commonly expressed in microseconds.
+	* *Bandwidth* is the amount of data that can be processed per unit of time, commonly expressed as megabytes/sec or gigabytes/sec.
+	* *Throughput* is the amount of operations that can be processed per unit of time, commonly expressed as *gflops*.
 
 ```cuda
 /* A simple CUDA program */
