@@ -130,7 +130,9 @@ int main(int argc, const char* argv[]) {
 
 ```cuda
 cudaError_t cudaMalloc(void** devPtr, size_t size);
-
+cudaError_t cudaMemcpy(void* dst, const void* src, size_t count, cudaMemcpyKind kind);
+cudaError_t cudaMemset(void* devPtr, int value, size_t count);
+cudaError_t cudaFree(void* devPtr);
 ```
 
 * Every CUDA call, except kernel launches, returns an error code of an enumerated type **cudaError_t**.
