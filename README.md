@@ -127,3 +127,10 @@ int main(int argc, const char* argv[]) {
 | cudaMemcpyKindHostToDevice   |
 | cudaMemcpyKindDeviceToHost   |
 | cudaMemcpyKindDeviceToDevice |
+
+```cuda
+cudaError_t cudaMalloc(void** devPtr, size_t size);
+
+```
+
+* Every CUDA call, except kernel launches, returns an error code of an enumerated type **cudaError_t**.
