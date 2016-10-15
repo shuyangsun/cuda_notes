@@ -155,9 +155,13 @@ char *cudaGetErrorString(cudaError_t error);
 * Threads from different blocks cannot cooperate.
 
 * Threads rely on the following two unique coordinates to distinguish themselves from each other:
-	* **blockIdx** (block index within a grid)
-	* **threadIdx** (thread index within a block)
+	* **blockIdx**: block index within a grid
+	* **threadIdx**: thread index within a block
 * These variables are built-in, pre-initialized variables that can be accessed within kernel functions.
 
 * The coordinate variable is of type **uint3**, a CUDA built-in vector type. The three elements can be accessed through **x**, **y**, and **z** respectively.
 
+* CUDA organizes grids and blocks in three dimensions. The dimensions of a grid and a block are specified by the following two built-in variables:
+	* **blockDim**: block dimension, measured in threads
+	* **gridDim**: grid dimension, measured in blocks
+* These variables are of type **dim3**. Use **x**, **y**, and **z** to access resepectively.
