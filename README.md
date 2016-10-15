@@ -141,5 +141,8 @@ char *cudaGetErrorString(cudaError_t error);
 * In the GPU memory hierarchy, the two most important types of memory are *global memory* and *shared memory*. (Both global and shared memory are on GPU)
 	* Global memory is analogous to CPU system memory.
 	* Shared memory is similar to the CPU cache, can be directly controlled from a CUDA C kernel.
-* 
+
+### Organizing Threads
+
+* When a kernel function is launched from the host side, execution is moved to a device where a large number of threads are generated and each thread executes the statements specified by the kernel function. 
 
