@@ -146,6 +146,8 @@ char *cudaGetErrorString(cudaError_t error);
 
 * When a kernel function is launched from the host side, execution is moved to a device where a large number of threads are generated and each thread executes the statements specified by the kernel function. 
 
+<br/>
+
 * All threads spawned by a single kernel launch are collectively called a *grid*.
 * All threads in a grid share the same global memory space.
 * A grid is made up of many thread blocks.
@@ -154,6 +156,8 @@ char *cudaGetErrorString(cudaError_t error);
 	* Block-local shared memory
 * Threads from different blocks cannot cooperate.
 
+<br/>
+
 * Threads rely on the following two unique coordinates to distinguish themselves from each other:
 	* **blockIdx**: block index within a grid
 	* **threadIdx**: thread index within a block
@@ -161,7 +165,13 @@ char *cudaGetErrorString(cudaError_t error);
 
 * The coordinate variable is of type **uint3**, a CUDA built-in vector type. The three elements can be accessed through **x**, **y**, and **z** respectively.
 
+<br/>
+
 * CUDA organizes grids and blocks in three dimensions. The dimensions of a grid and a block are specified by the following two built-in variables:
 	* **blockDim**: block dimension, measured in threads
 	* **gridDim**: grid dimension, measured in blocks
 * These variables are of type **dim3**. Use **x**, **y**, and **z** to access resepectively.
+
+<br/>
+
+
