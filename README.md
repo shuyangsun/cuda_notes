@@ -185,6 +185,8 @@ usigned int tId_z {threadIdx.z};
 	* **blockDim**: block dimension, measured in threads
 	* **gridDim**: grid dimension, measured in blocks
 * These variables are of type **dim3**. Use **x**, **y**, and **z** to access resepectively.
-
-
+* There are two distinct sets of grid and block variables in a CUDA program: manually-defined **dim3** data type and pre-defined **uint3** data type:
+	* On the host side, you define the dimensions of a grid and block using **dim3** data type as part of a kernel invocation.
+	* When the kernel is executing, the CUDA runtime generates the corrresponding built-in, pre-initialized grid, block, and thread variables, which are accessible within the kernel function and have type **uint3**.
+	* The manually created **dim3** variables are only visible on the host side; the built-in **uint3** variables are only visible on the device side.
 
