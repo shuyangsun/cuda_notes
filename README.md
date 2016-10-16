@@ -165,6 +165,20 @@ char *cudaGetErrorString(cudaError_t error);
 
 * The coordinate variable is of type **uint3**, a CUDA built-in vector type. The three elements can be accessed through **x**, **y**, and **z** respectively.
 
+```cuda
+// Block index
+typeof(blockIdx); // uint3
+unsigned int bId_x {blockIdx.x};
+unsigned int bId_y {blockIdx.y};
+unsigned int bId_z {blockIdx.z};
+
+// Thread index
+typeof(threadIdx); // uint3
+usigned int tId_x {threadIdx.x};
+usigned int tId_y {threadIdx.y};
+usigned int tId_z {threadIdx.z};
+```
+
 #### Grids and Blocks Organization
 
 * CUDA organizes grids and blocks in three dimensions. The dimensions of a grid and a block are specified by the following two built-in variables:
