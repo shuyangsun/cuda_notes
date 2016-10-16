@@ -194,8 +194,8 @@ usigned int tId_z {threadIdx.z};
 const dim3 block {3};
 const dim3 grid {(num_ele + block.x - 1) / block.x};
 
-check_index_host(block, grid);
-check_index_device<<<block, grid>>>();
+check_index_host(grid, block);
+check_index_device<<<grid, block>>>();
 
 cudaDeviceReset();
 
