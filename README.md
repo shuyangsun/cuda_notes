@@ -52,7 +52,7 @@ ___
 * The device code is written using CUDA C extended with keywords for labeling data-parallel functions, called **kernels**.
 * You can create or extend programming languages with support for GPU acceleration using the CUDA Compiler SDK.
 
-### HELLO WORLD FROM GPU
+### "Hello World" from GPU
 
 ```cuda
 #include <cstdio>
@@ -233,4 +233,4 @@ threadIdx (2, 0, 0) blockIdx (1, 0, 0) blockDim (3, 1, 1) gridDim (2, 1, 1)
 	* Performance characteristics of the kernel
 	* Limitations on GPU resources
 
-
+### Launching a CUDA Kernel
