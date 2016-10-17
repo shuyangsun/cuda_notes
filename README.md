@@ -174,9 +174,9 @@ unsigned int bId_z {blockIdx.z};
 
 // Thread index
 typeof(threadIdx); // uint3
-usigned int tId_x {threadIdx.x};
-usigned int tId_y {threadIdx.y};
-usigned int tId_z {threadIdx.z};
+unsigned int tId_x {threadIdx.x};
+unsigned int tId_y {threadIdx.y};
+unsigned int tId_z {threadIdx.z};
 ```
 
 #### Grids and Blocks Organization
@@ -184,10 +184,10 @@ usigned int tId_z {threadIdx.z};
 * CUDA organizes grids and blocks in three dimensions. The dimensions of a grid and a block are specified by the following two built-in variables:
 	* **blockDim**: block dimension, measured in threads
 	* **gridDim**: grid dimension, measured in blocks
-* These variables are of type **dim3**. Use **x**, **y**, and **z** to access resepectively.
+* These variables are of type **dim3**. Use **x**, **y**, and **z** to access respectively.
 * There are two distinct sets of grid and block variables in a CUDA program: manually-defined **dim3** data type and pre-defined **uint3** data type:
 	* On the host side, you define the dimensions of a grid and block using **dim3** data type as part of a kernel invocation.
-	* When the kernel is executing, the CUDA runtime generates the corrresponding built-in, pre-initialized grid, block, and thread variables, which are accessible within the kernel function and have type **uint3**.
+	* When the kernel is executing, the CUDA runtime generates the corresponding built-in, pre-initialized grid, block, and thread variables, which are accessible within the kernel function and have type **uint3**.
 	* The manually created **dim3** variables are only visible on the host side; the built-in **uint3** variables are only visible on the device side.
 
 | Host           | Device              |
@@ -224,3 +224,11 @@ threadIdx (2, 0, 0) blockIdx (1, 0, 0) blockDim (3, 1, 1) gridDim (2, 1, 1)
 ---------------------
 */
 ```
+* For a given data size, the general steps to determine the grid and block dimensions are:
+	* Decide the block size.
+	* Calculate the grid dimension based on the application data size and the block size.
+* To determine the block dimension, you usually need to consider:
+	* Performance characteristics of the kernel
+	* Limitations on GPU resources
+
+
