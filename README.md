@@ -92,6 +92,8 @@ int main(int argc, const char* argv[]) {
 * CUDA exposes both thread and memory hierarchy to programmer. (e.g., *shared memory*: software-managed cache)
 * Three key abstractions: a hierarchy of thread groups, a hierarchy of memory groups, and barrier synchronization.
 
+___
+
 ## 2. CUDA Programming Model
 
 ### Introducing the CUDA Programming Model
