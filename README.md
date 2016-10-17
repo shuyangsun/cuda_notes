@@ -250,3 +250,5 @@ __global__ void kernel_name(/* argument list */);
 | **\__global__** | Executed on the device | Callable from the host <br /> Callable from the device for devices of compute capability 3 | Must have a **void** return type |
 | **\__device__** | Executed on the device | Callable from the device only | |
 | **\__host__** | Executed on the host | Callable from the host only | Can be omitted |
+
+* The **\__device__** and **\__host__** qualifiers can be used together, in which case the function is compiled for both the host and the device.
