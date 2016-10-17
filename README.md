@@ -190,6 +190,16 @@ usigned int tId_z {threadIdx.z};
 	* When the kernel is executing, the CUDA runtime generates the corrresponding built-in, pre-initialized grid, block, and thread variables, which are accessible within the kernel function and have type **uint3**.
 	* The manually created **dim3** variables are only visible on the host side; the built-in **uint3** variables are only visible on the device side.
 
+| Host           | Device              |
+| -------------- | ------------------- |
+| **dim3** grid  | **uint3** gridDim   |
+| **dim3** block | **uint3** blockDim  |
+|                | **uint3** blockIdx  |
+|                | **uint3** threadIdx |
+
+* Host side: manually create; type of **dim3**
+* Device side: built-in, pre-initialized; type of **uint3**
+
 ```cuda
 const dim3 block {3};
 const dim3 grid {(num_ele + block.x - 1) / block.x};
@@ -214,13 +224,3 @@ threadIdx (2, 0, 0) blockIdx (1, 0, 0) blockDim (3, 1, 1) gridDim (2, 1, 1)
 ---------------------
 */
 ```
-| Host           | Device              |
-| -------------- | ------------------- |
-| **dim3** grid  | **uint3** gridDim   |
-| **dim3** block | **uint3** blockDim  |
-|                | **uint3** blockIdx  |
-|                | **uint3** threadIdx |
-
-* Host side: manually create; type of **dim3**
-* Device side: built-in, pre-initialized; type of **uint3**
-
