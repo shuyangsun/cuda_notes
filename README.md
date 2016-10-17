@@ -240,3 +240,8 @@ threadIdx (2, 0, 0) blockIdx (1, 0, 0) blockDim (3, 1, 1) gridDim (2, 1, 1)
 * **cudaMemcpy** implicitly synchronizes at the host side, it starts to copy after all previous kernel calls have completed.
 * A kernel function is the code to be executed on the device side in parallel.
 * In a kernel function, you define the computation for a single thread, and the data access for that thread.
+* A kernel is defined using **__global__** declaration specification.
+
+```cuda
+__global__ void kernel_name(/* argument list */);
+```
