@@ -252,3 +252,11 @@ __global__ void kernel_name(/* argument list */);
 | **\__host__** | Executed on the host | Callable from the host only | Can be omitted |
 
 * The **\__device__** and **\__host__** qualifiers can be used together, in which case the function is compiled for both the host and the device.
+* Restrictions for CUDA kernels functions:
+	* Access to device memory only
+	* Must have **void** return type
+	* No support for a variable number of arguments
+	* No support for **static** variables
+	* No support for function pointers
+	* Exhibit an asynchronous behavior
+
