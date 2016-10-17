@@ -247,6 +247,6 @@ __global__ void kernel_name(/* argument list */);
 ```
 | Qualifiers | Execution | Callable | Notes |
 | --- | --- | --- | --- |
-| **__global__** | Executed on the device | Callable from the host <br /> Callable from the device for devices of compute capability 3 | Must have a **void** return type |
-| **__device__** | Executed on the device | Callable from the device only | |
-| **__host__** | Executed on the host | Callable from the host only | Can be omitted |
+| **\__global__** | Executed on the device | Callable from the host <br /> Callable from the device for devices of compute capability 3 | Must have a **void** return type |
+| **\__device__** | Executed on the device | Callable from the device only | |
+| **\__host__** | Executed on the host | Callable from the host only | Can be omitted |
