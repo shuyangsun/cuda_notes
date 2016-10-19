@@ -297,23 +297,22 @@ __host__ inline void print_device_info(void) {
 ```bash
 $ nvprof ./runnable_name
 
-/** Sample output:
+# Sample output:
+# 
+# ==10911== Profiling application: ./arrsum
+# ==10911== Profiling result:
+# Time(%)      Time     Calls       Avg       Min       Max  Name
+#  62.90%  362.41ms         2  181.20ms  181.09ms  181.32ms  [CUDA memcpy HtoD]
+#  35.52%  204.69ms         1  204.69ms  204.69ms  204.69ms  [CUDA memcpy DtoH]
+#   1.58%  9.1138ms         1  9.1138ms  9.1138ms  9.1138ms  sum_arr_gpu(float const *, float const *, float*, unsigned int)
+# 
+# ==10911== API calls:
+# Time(%)      Time     Calls       Avg       Min       Max  Name
+#  59.22%  567.27ms         3  189.09ms  180.96ms  204.89ms  cudaMemcpy
+#  23.42%  224.37ms         3  74.792ms  474.22us  223.42ms  cudaMalloc
+# 
+#  ... etc.
 
-==10911== Profiling application: ./arrsum
-==10911== Profiling result:
-Time(%)      Time     Calls       Avg       Min       Max  Name
- 62.90%  362.41ms         2  181.20ms  181.09ms  181.32ms  [CUDA memcpy HtoD]
- 35.52%  204.69ms         1  204.69ms  204.69ms  204.69ms  [CUDA memcpy DtoH]
-  1.58%  9.1138ms         1  9.1138ms  9.1138ms  9.1138ms  sum_arr_gpu(float const *, float const *, float*, unsigned int)
-
-==10911== API calls:
-Time(%)      Time     Calls       Avg       Min       Max  Name
- 59.22%  567.27ms         3  189.09ms  180.96ms  204.89ms  cudaMemcpy
- 23.42%  224.37ms         3  74.792ms  474.22us  223.42ms  cudaMalloc
-
- ... etc.
-
- */
 ```
 
 * It's important to analyze the time spent on data transfer and data calculation, having a good understanding of their relationship helps improving the performance in the future.
