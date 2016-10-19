@@ -276,3 +276,8 @@ __host__ inline void print_device_info(void) {
 
 #### Timing with nvprof
 
+* Timing with **nvprof** is more accurate than using CPU timer.
+
+```bash
+nvprof ./main
+```
