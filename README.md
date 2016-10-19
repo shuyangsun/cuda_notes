@@ -287,8 +287,12 @@ __host__ inline void print_device_info(void) {
 	cudaDeviceProp device_prop {};
 	cudaGetDeviceProperties(&device_prop, device_idx);
 	std::cout << "Using device " << device_idx << ": " << device_prop.name << " ";
-	std::cout << "(" << device_prop.multiProcessorCount << " SM Units)" << std::endl;
+	std::cout << "with " << device_prop.multiProcessorCount << " SM units" << std::endl;
 }
+
+/** Sample output:
+Using device 0: TITAN X (Pascal) with 28 SM units
+ */
 ```
 
 #### Timing with nvprof
