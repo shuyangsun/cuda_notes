@@ -260,3 +260,19 @@ __global__ void kernel_name(/* argument list */);
 	* No support for function pointers
 	* Exhibit an asynchronous behavior
 
+### Timing Your Kernel
+
+#### Timing with CPU Timer
+
+```cuda
+// How to get device information
+__host__ inline void print_device_info(void) {
+	unsigned int device_idx {};
+	cudaDeviceProp device_prop {};
+	check_err({cudaGetDeviceProperties(&device_prop, device_idx)});
+	std::cout << "Using device " << device_idx << ": " << device_prop.name << std::endl;
+}
+```
+
+#### Timing with nvprof
+
