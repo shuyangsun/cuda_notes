@@ -283,10 +283,11 @@ __host__ inline void check_err(const std::initializer_list<const cudaError_t>& e
 ```cuda
 // How to get device information
 __host__ inline void print_device_info(void) {
-	unsigned int device_idx {};
+	unsigned int device_idx {0};
 	cudaDeviceProp device_prop {};
 	cudaGetDeviceProperties(&device_prop, device_idx);
-	std::cout << "Using device " << device_idx << ": " << device_prop.name << std::endl;
+	std::cout << "Using device " << device_idx << ": " << device_prop.name << " ";
+	std::cout << "(" << device_prop.multiProcessorCount << " SM Units)" << std::endl;
 }
 ```
 
@@ -315,4 +316,5 @@ $ nvprof ./runnable_name
 
 ```
 
-* It's important to analyze the time spent on data transfer and data calculation, having a good understanding of their relationship helps improving the performance in the future.
+* For HPC workloads, it is important to understand the compute to communication ratio in a program.
+* It's important to determine how your application compares to theoretical limits.
