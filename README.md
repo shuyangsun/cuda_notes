@@ -262,7 +262,7 @@ __global__ void kernel_name(/* argument list */);
 
 ### Handling Errors
 
-* Use an **inline** function to check **cudaError_t**s returned by CUDA calls.
+* Use an **inline** function to check **cudaError_t**s returned by CUDA API calls.
 
 ```cuda
 __host__ inline void check_err(const std::initializer_list<const cudaError_t>& errors) {
