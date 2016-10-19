@@ -260,6 +260,22 @@ __global__ void kernel_name(/* argument list */);
 	* No support for function pointers
 	* Exhibit an asynchronous behavior
 
+### Handling Errors
+
+* Use an **inline** function to check **cudaError_t**s returned by CUDA calls.
+
+```cuda
+__host__ inline void check_err(const std::initializer_list<const cudaError_t>& errors) {
+	#pragma unroll
+	for (auto err: errors) {
+		if (err != cudaSuccess) {
+			fprintf(stderr, "%s\n", cudaGetErrorString(err));
+			throw customized_cuda_exception {"Info about error..."};
+		}
+	}
+}
+```
+
 ### Timing Your Kernel
 
 #### Timing with CPU Timer
