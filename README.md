@@ -310,7 +310,10 @@ Time(%)      Time     Calls       Avg       Min       Max  Name
 Time(%)      Time     Calls       Avg       Min       Max  Name
  59.22%  567.27ms         3  189.09ms  180.96ms  204.89ms  cudaMemcpy
  23.42%  224.37ms         3  74.792ms  474.22us  223.42ms  cudaMalloc
+
  ... etc.
 
  */
 ```
+
+* It's important to analyze the time spent on data transfer and data calculation, having a good understanding of their relationship helps improving the performance in the future.
