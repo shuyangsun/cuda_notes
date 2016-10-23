@@ -331,8 +331,13 @@ $ nvprof ./runnable_name
 	* Each thread has its own instruction address counter.
 	* Each thread has its own register state.
 	* Each thread can have an independent execution path.
+* The number 32 is a magic number in CUDA programming. It comes from hardware, and has a significant impact on the performance of software.
+* A thread block is scheduled on only one SM. Once a thread block is scheduled on an SM, it remains there until execution completes. An SM can hold more than one thread block at the same time.
+* Shared memory and registers are precious resources in an SM. Shared memory is partitioned among thread blocks resident on the SM and registers are partitioned among threads. Threads in a thread block can cooperate and communicate with each other through these resources. While all threads in a thread block run logically in parallel, not all threads can execute physically at the same time. As a result, different threads in a thread block may make progress at a different pace.
+* Threads in a block can communicate with each other, but no primitives are provided for inter-block synchronization.
+* Switching between concurrent warps has no overhead because hardware resources are partitioned among all threads and blocks on an SM.
 
-* Fermi Architecture: 
+#### The Fermi Architecture: 
 ![alt text][fermi_arch]
 [fermi_arch]: resources/Fermi_architecture.png "Fermi Architecture"
 
