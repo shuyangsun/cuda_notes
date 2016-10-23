@@ -318,3 +318,23 @@ $ nvprof ./runnable_name
 
 * For HPC workloads, it is important to understand the compute to communication ratio in a program.
 * It's important to determine how your application compares to theoretical limits.
+
+## 3. CUDA Execution Model
+
+### GPU Architecture Overview
+
+* The GPU architecture is built around a scalable array of *Streaming Multiprocessors* (SM).
+* When a kernel grid is launched, the thread blocks of that kernel grid are distributed among available SMs for execution. Once scheduled on an SM, the threads of a thread block execute concurrently only on that assigned SM. Multiple thread blocks may be assigned to the same SM at once and are scheduled based on the availability of SM resources. Instructions within a single thread are pipelined to leverage instruction-level parallelism, in addition to the thread-level parallelism you are already familiar within CUDA.
+* CUDA employs a *Single Instruction Multiple Thread* (SIMT) architecture to manage and execute threads in groups of 32 called *warps*. All threads in a warp execute the same instruction at the same time. Each thread has its own instruction address counter and register state, and carries out the current instruction on its own data. Each SM partitions the thread blocks assigned to it into 32-thread warps that it then schedules for execution on available hardware resources.
+* A key difference between SIMD and SIMT is that, SIMD requires that all vector elements in a vector execute together in a unified synchronous group, whereas SIMT allows multiple threads in the same warp to execute independently. Even though all threads in a warp start together at the same program address, it is possible for individual threads to have different behavior.
+* The SIMT model includes three key features that SIMD does not:
+	* Each thread has its own instruction address counter.
+	* Each thread has its own register state.
+	* Each thread can have an independent execution path.
+
+* Fermi Architecture: 
+![alt text][fermi_arch]
+[fermi_arch]: resources/Fermi_architecture.png "Fermi Architecture"
+
+
+
