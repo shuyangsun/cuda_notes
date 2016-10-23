@@ -337,9 +337,10 @@ $ nvprof ./runnable_name
 * Threads in a block can communicate with each other, but no primitives are provided for inter-block synchronization.
 * Switching between concurrent warps has no overhead because hardware resources are partitioned among all threads and blocks on an SM.
 
-#### The Fermi Architecture: 
+#### The Fermi Architecture:
 ![alt text][fermi_arch]
 [fermi_arch]: resources/Fermi_architecture.png "Fermi Architecture"
+from https://commons.wikimedia.org/wiki/File:Fermi.svg
 
 
 
