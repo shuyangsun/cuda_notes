@@ -340,7 +340,7 @@ $ nvprof ./runnable_name
 #### The Fermi Architecture:
 ![alt text][fermi_arch]
 [fermi_arch]: resources/Fermi_architecture.png "Fermi Architecture"
-from https://commons.wikimedia.org/wiki/File:Fermi.svg
+(from https://commons.wikimedia.org/wiki/File:Fermi.svg)
 
 
 
