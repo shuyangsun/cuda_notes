@@ -395,10 +395,30 @@ $ nvprof ./runnable_name
 
 // For 2 or 3 dimensional thread block it's the same, just convert the index to 1D
 const int idx_1d = threadIdx.x;
-const int idx_2d = threadIdx.y * threadIdx.x + threadIdx.x;
-const int idx_3d = threadIdx.z * threadIdx.y * threadIdx.x + threadIdx.y * threadIdx.x + threadIdx.x;
+const int idx_2d = (threadIdx.y * threadIdx.x) + threadIdx.x;
+const int idx_3d = (threadIdx.z * threadIdx.y * threadIdx.x) + (threadIdx.y * threadIdx.x) + threadIdx.x;
 ```
 
 * warps_per_block = ceil(threads_per_block / warp_size)
 * If thread block size is not an even multiple of warp size, some threads in the last warp are left inactive.
 * No matter what the block and grid dimension is, from the hardware perspective, a thread block is a 1D collection of warps.
+
+#### Warp Divergence
+
+```cuda
+// Example
+__global__ void foo() {
+	if (condition) {
+		// some threads will execute this block of code
+	} else {
+		// some threads will execute this one instead
+	}
+}
+// contradict with the rule that all threads must run the same code
+```
+
+* Threads in the same warp executing different instructions is referred to as *warp divergence*.
+* If threads of a warp diverge, the warp serially executes each branch path, disabling threads that do not take that path.
+* Warp divergence can cause significantly degraded performance.
+* Different condition values in different warps do not cause warp divergence.
+* It may be possible to partition data in such a way as to ensure all threads in the same warp take the same control path in an application.
