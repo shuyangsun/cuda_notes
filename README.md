@@ -342,5 +342,9 @@ $ nvprof ./runnable_name
 [fermi_arch]: resources/Fermi_architecture.png "Fermi Architecture"
 (from https://commons.wikimedia.org/wiki/File:Fermi.svg)
 
+![alt text][fermi_drawing_01]
+[fermi_drawing_01]: resources/Fermi_drawing.jpg "Fermi Processing Flow"
+
+#### The Kepler Architecture
 
 
