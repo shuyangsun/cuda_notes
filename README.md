@@ -371,7 +371,14 @@ $ nvprof ./runnable_name
 ### Profile-Driven Optimization
 
 * Profiling is the act of analyzing program performance by measuring:
-	* The space(memory) or time complexity of application code
+	* The space (memory) or time complexity of application code
 	* The use of particular instructions
 	* The frequency and duration of function calls
+* CUDA provides two primary profiling tools:
+	* **nvvp**: a standalone visual profiler
+	* **nvprof**: a command-line profiler
+* Three common limiters to performance for a kernel:
+	* Memory bandwidth
+	* Compute resources
+	* Instruction and memory latency
 
