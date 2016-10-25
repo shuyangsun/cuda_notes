@@ -347,4 +347,13 @@ $ nvprof ./runnable_name
 
 #### The Kepler Architecture
 
+![alt text][kepler_arch_01]
+[kepler_arch_01]: resources/kepler_01.jpg "Kepler Architecture"
+(from http://electronicdesign.com/site-files/electronicdesign.com/files/archive/electronicdesign.com/content/content/74002/74002_fig2.jpg)
+
+![alt text][kepler_arch_02]
+[kepler_arch_02]: resources/kepler_02.jpg "SMX vs. SM"
+(from http://images.bit-tech.net/content_images/2012/03/nvidia-geforce-gtx-680-2gb-review/gtx680-21b.jpg)
+
+
 
