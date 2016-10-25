@@ -382,3 +382,23 @@ $ nvprof ./runnable_name
 	* Compute resources
 	* Instruction and memory latency
 
+### Understanding the Nature of Warp Execution
+
+#### Warps and Thread Blocks
+
+* Threads with consecutive values for **threadIdx.x** are grouped into warps.
+
+```cuda
+// Example: 1D thread block with 64 threads
+// Warp 0: thread  0, thread  1, thread  2, ..., thread 32
+// Warp 1: thread 32, thread 33, thread 34, ..., thread 63
+
+// For 2 or 3 dimensional thread block it's the same, just convert the index to 1D
+const int idx_1d = threadIdx.x;
+const int idx_2d = threadIdx.y * threadIdx.x + threadIdx.x;
+const int idx_3d = threadIdx.z * threadIdx.y * threadIdx.x + threadIdx.y * threadIdx.x + threadIdx.x;
+```
+
+* warps_per_block = ceil(threads_per_block / warp_size)
+* If thread block size is not an even multiple of warp size, some threads in the last warp are left inactive.
+* No matter what the block and grid dimension is, from the hardware perspective, a thread block is a 1D collection of warps.
