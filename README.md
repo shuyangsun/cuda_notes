@@ -338,6 +338,13 @@ $ nvprof ./runnable_name
 * Switching between concurrent warps has no overhead because hardware resources are partitioned among all threads and blocks on an SM.
 
 #### The Fermi Architecture:
+
+* Some terminologies:
+	* LD/ST: load/store unit
+	* ALU: arithmetic logic unit
+	* FPU: floating-point unit (executes one integer or floating point instruction per clock cycle)
+	* SFU: special function unit (sin, cos, etc.)
+
 ![alt text][fermi_arch]
 [fermi_arch]: resources/Fermi_architecture.png "Fermi Architecture"
 (from https://commons.wikimedia.org/wiki/File:Fermi.svg)
@@ -346,6 +353,11 @@ $ nvprof ./runnable_name
 [fermi_drawing_01]: resources/Fermi_drawing.jpg "Fermi Processing Flow"
 
 #### The Kepler Architecture
+
+* New features in Kepler:
+	* Enhanced SMs
+	* Dynamic Parallelism: launch another kernel within a kernel
+	* Hyper-Q: enabling CPU cores to simultaneously run more tasks on the GPU.
 
 ![alt text][kepler_arch_01]
 [kepler_arch_01]: resources/kepler_01.jpg "Kepler Architecture"
@@ -356,4 +368,10 @@ $ nvprof ./runnable_name
 (from http://images.bit-tech.net/content_images/2012/03/nvidia-geforce-gtx-680-2gb-review/gtx680-21b.jpg)
 
 
+### Profile-Driven Optimization
+
+* Profiling is the act of analyzing program performance by measuring:
+	* The space(memory) or time complexity of application code
+	* The use of particular instructions
+	* The frequency and duration of function calls
 
