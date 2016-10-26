@@ -424,4 +424,4 @@ __global__ void foo() {
 * It may be possible to partition data in such a way as to ensure all threads in the same warp take the same control path in an application.
 * branch_efficiency = (num_branches - num_divergent_branches) / num_branches
 * Use **nvprof --metrics branch_efficiency ./runnable-name** to check each kernel's warp divergence efficiency.
-
+* Some times warp divergence does not happen (when it should), that's because CUDA compiler optimization. It replaces branch instructions (which cause actual control flow to diverge) with predicated instructions for short, conditional code segments.
