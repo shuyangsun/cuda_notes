@@ -425,3 +425,6 @@ __global__ void foo() {
 * branch_efficiency = (num_branches - num_divergent_branches) / num_branches
 * Use `$ nvprof --metrics branch_efficiency ./runnable-name` to check each kernel's warp divergence efficiency.
 * Some times warp divergence does not happen (when it should), that's because CUDA compiler optimization. It replaces branch instructions (which cause actual control flow to diverge) with predicated instructions for short, conditional code segments.
+
+##### Branch Prediction
+* In branch prediction, a predicate variable for each thread is set to 1 or 0 according to a conditional. Both conditional flow paths are fully executed, but only instructions with a predicate of 1 are executed. Instructions with a predicate of 0 do not, but the corresponding thread does not stall either. The difference between this and actual branch instructions is subtle, but important to understand. The compiler replaces a branch instruction with predicted instructions only if the number of instructions in the body of a conditional statement is less than a certain threshold. Therefore, a long code path will certainly result in warp divergence.
