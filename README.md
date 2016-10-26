@@ -423,8 +423,27 @@ __global__ void foo() {
 * Different condition values in different warps do not cause warp divergence.
 * It may be possible to partition data in such a way as to ensure all threads in the same warp take the same control path in an application.
 * branch_efficiency = (num_branches - num_divergent_branches) / num_branches
-* Use `$ nvprof --metrics branch_efficiency ./runnable-name` to check each kernel's warp divergence efficiency.
 * Some times warp divergence does not happen (when it should), that's because CUDA compiler optimization. It replaces branch instructions (which cause actual control flow to diverge) with predicated instructions for short, conditional code segments.
 
 ##### Branch Prediction
 * In branch prediction, a predicate variable for each thread is set to 1 or 0 according to a conditional. Both conditional flow paths are fully executed, but only instructions with a predicate of 1 are executed. Instructions with a predicate of 0 do not, but the corresponding thread does not stall either. The difference between this and actual branch instructions is subtle, but important to understand. The compiler replaces a branch instruction with predicted instructions only if the number of instructions in the body of a conditional statement is less than a certain threshold. Therefore, a long code path will certainly result in warp divergence.
+
+```bash
+$ nvprof --metrics branch_efficiency ./runnable-name # Check each kernel's warp divergence efficiency
+$ nvcc -g -G ./runnable-name # Disable kernel optimization
+$ nvprof --events branch,divergent_branch ./runnable-name # Check branch counter
+```
+#### Resource Partitioning
+
+* The local execution context of a warp mainly consists of the following resources:
+	* Program counters
+	* Registers
+	* Shared memory
+
+* The execution context of each warp processed by an SM is maintained on-chip during the entire lifetime of the warp. Therefore, switching from one execution context to another has no cost.
+* Changing the number of registers and the amount of shared memory required by the kernel, can change the number of blocks and warps that can simultaneously reside on an SM.
+* If there are insufficient registers or shared memory on each SM to process at least one block, the kernel launch will fail.
+* A thread block is called an *active block* when compute resources such as registers and shared memory, have been allocated to it. The warps it contains are called *active warps*. Active warps can be further classified into the following three types:
+	* Selected warp
+	* Stalled warp
+	* Eligible warp
