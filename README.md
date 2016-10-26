@@ -422,3 +422,6 @@ __global__ void foo() {
 * Warp divergence can cause significantly degraded performance.
 * Different condition values in different warps do not cause warp divergence.
 * It may be possible to partition data in such a way as to ensure all threads in the same warp take the same control path in an application.
+* branch_efficiency = (num_branches - num_divergent_branches) / num_branches
+* Use **nvprof --metrics branch_efficiency ./runnable-name** to check each kernel's warp divergence efficiency.
+
