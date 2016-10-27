@@ -444,6 +444,10 @@ $ nvprof --events branch,divergent_branch ./runnable-name # Check branch counter
 * Changing the number of registers and the amount of shared memory required by the kernel, can change the number of blocks and warps that can simultaneously reside on an SM.
 * If there are insufficient registers or shared memory on each SM to process at least one block, the kernel launch will fail.
 * A thread block is called an *active block* when compute resources such as registers and shared memory, have been allocated to it. The warps it contains are called *active warps*. Active warps can be further classified into the following three types:
-	* Selected warp
-	* Stalled warp
-	* Eligible warp
+	* Selected warp: actively executing
+	* Stalled warp: ready for execution but not currently executing
+	* Eligible warp: not ready for execution
+* The warp scheduler on an SM select active warps on every cycle and dispatch them to execution units.
+* A warp is eligible for execution if both of the following two conditions are met:
+	* Thirty-two CUDA cores are available for execution.
+	* All arguments to the current instruction are ready.
