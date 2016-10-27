@@ -462,7 +462,8 @@ $ nvprof --events branch,divergent_branch ./runnable-name # Check branch counter
 	* Arithmetic instructions
 	* Memory instructions
 * Two types of latency:
-	* Arithmetic latency: the time between an arithmetic operation starting and its output being produced.
-	* Memory instructions: the time between a load or store operation being issued and the data arriving its destination.
+	* Arithmetic latency: the time between an arithmetic operation starting and its output being produced. (10-20 cycles)
+	* Memory instructions: the time between a load or store operation being issued and the data arriving its destination. (400-800 cycles)
+
 
 
