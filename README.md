@@ -449,5 +449,5 @@ $ nvprof --events branch,divergent_branch ./runnable-name # Check branch counter
 	* Eligible warp: not ready for execution
 * The warp scheduler on an SM select active warps on every cycle and dispatch them to execution units.
 * A warp is eligible for execution if both of the following two conditions are met:
-	* Thirty-two CUDA cores are available for execution.
+	* 32 CUDA cores are available for execution.
 	* All arguments to the current instruction are ready.
