@@ -464,6 +464,6 @@ $ nvprof --events branch,divergent_branch ./runnable-name # Check branch counter
 * Two types of latency:
 	* Arithmetic latency: the time between an arithmetic operation starting and its output being produced. (10-20 cycles)
 	* Memory instructions: the time between a load or store operation being issued and the data arriving its destination. (400-800 cycles)
-
-
+* Use *Little's Law* to estimate the number of active warps required to hide latency:
+	* num_warps_needed_to_hide_latency = avg_instruction_latency * through_output_of_warps_per_cycle
 
