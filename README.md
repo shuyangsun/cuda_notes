@@ -451,3 +451,18 @@ $ nvprof --events branch,divergent_branch ./runnable-name # Check branch counter
 * A warp is eligible for execution if both of the following two conditions are met:
 	* 32 CUDA cores are available for execution.
 	* All arguments to the current instruction are ready.
+* On Kepler SM, the number of active warps is limited to 64, and the number of selected warps at any cycle is less than or equal to 4.
+* The compute resources limit the number of active warps. Therefore, you must be aware of the restrictions imposed by the hardware, and the resources used by your kernel. In order to maximize GPU utilization, you need to maximize the number of active warps.
+
+#### Latency Hiding
+
+* The number of clock cycles between an instruction being issued and being completed is defined as *instruction latency*.
+* Full compute resource utilization is achieved when all warp schedulers have an eligible warp at every clock cycle. This ensures the latency of each instruction can be hidden by issuing other instructions in other resident warps.
+* Two types of instructions (which could have latency):
+	* Arithmetic instructions
+	* Memory instructions
+* Two types of latency:
+	* Arithmetic latency: the time between an arithmetic operation starting and its output being produced.
+	* Memory instructions: the time between a load or store operation being issued and the data arriving its destination.
+
+
