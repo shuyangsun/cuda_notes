@@ -466,4 +466,18 @@ $ nvprof --events branch,divergent_branch ./runnable-name # Check branch counter
 	* Memory instructions: the time between a load or store operation being issued and the data arriving its destination. (400-800 cycles)
 * Use *Little's Law* to estimate the number of active warps required to hide latency:
 	* num_warps_needed_to_hide_latency = avg_instruction_latency * through_output_of_warps_per_cycle
+* Two ways to increase parallelism:
+	* *Instruction-level parallelism (ILP)*: Most independent instructions within a thread
+	* *Thread-level parallelism (TLP)*: More concurrently eligible threads
+* Choosing an optimal execution configuration is a matter of striking a balance between latency hiding and resource utilization.
+
+#### Occupancy
+* *Occupancy* is the ratio of active warps to maximum number of warps, per SM.
+* Use *CUDA Occupancy Calculator* to select grid and block dimensions to maximize occupancy for a kernel.
+* Guidelines for Grid and Block Size:
+	* Keep the number of threads per block a multiple of warp size (32).
+	* Avoid small block sizes: Start with at least 128 or 256 threads per block.
+	* Adjust block size up or down according to kernel resource requirements.
+	* Keep the number of blocks much greater than the number of SMs to expose sufficient parallelism to your device.
+	* Conduct experiments to discover the best execution configuration and resource usage.
 
