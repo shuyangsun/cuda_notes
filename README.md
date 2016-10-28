@@ -474,6 +474,9 @@ $ nvprof --events branch,divergent_branch ./runnable-name # Check branch counter
 #### Occupancy
 * *Occupancy* is the ratio of active warps to maximum number of warps, per SM.
 * Use *CUDA Occupancy Calculator* to select grid and block dimensions to maximize occupancy for a kernel.
+* Manipulating thread blocks to either extreme can restrict resource utilization:
+	* Small thread blocks: too few threads per block leads to hardware limits on the number of warps per SM to be reached before all resources are fully utilized.
+	* Large thread blocks: too many threads per block leads to fewer per-SM hardware resources available to each thread.
 * Guidelines for Grid and Block Size:
 	* Keep the number of threads per block a multiple of warp size (32).
 	* Avoid small block sizes: Start with at least 128 or 256 threads per block.
