@@ -491,3 +491,25 @@ $ nvprof --events branch,divergent_branch ./runnable-name # Check branch counter
 	* *Block-level*: wait for all threads in a thread block to reach the same point in execution on the device.
 * **cudaDeviceSynchronize()** wait for all operations (copies, kernels, and so on) have completed, also it returns errors from previous asynchronous operations.
 * Mark synchronization points in the kernel using **__device__ void __syncthreads(void);**.
+* When **__syncthreads** is called, each thread in the same thread block must wait until all other threads in that thread block have reached this synchronization point. All global and shared memory accesses made by all threads prior to this barrier will be visible to all other threads in the thread block after the barrier.
+* The only safe way to synchronize across block is to use the global synchronization point at the end of every kernel execution (and then maybe start a new one).
+* Not allowing threads in different blocks to synchronize with each other, GPUs can execute blocks in any order. This enables CUDA programs to be scalable across massively parallel GPUs.
+
+#### Scalability
+
+* Real scalability depends on algorithm design and hardware features.
+* The ability to execute the same application code on a varying number of compute cores is referred to as *transparent scalability*.
+* Scalability can be more important than efficiency.
+	* A scalable but inefficient system can handle larger workloads by simply adding hardware cores.
+	* An efficient but un-scalable system may quickly reach an upper limit on achievable performance.
+
+### Exposing Parallelism
+
+* *Achieved occupancy*: avg_active_warps_per_cycle / max_num_waprs_supported_on_sm
+* *Global load efficiency*: requested_global_load_throughput / required_global_load_throughput
+
+```bash
+$ nvprof --metrics achieved_occupancy ./runnable_name // [0, 1]
+$ nvprof --metrics gld_throughput ./runnable_name // GB/s
+$ nvprof --metrics gld_efficiency ./runnable_name // [percentage]% (global load efficiency)
+```
