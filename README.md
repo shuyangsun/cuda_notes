@@ -484,3 +484,10 @@ $ nvprof --events branch,divergent_branch ./runnable-name # Check branch counter
 	* Keep the number of blocks much greater than the number of SMs to expose sufficient parallelism to your device.
 	* Conduct experiments to discover the best execution configuration and resource usage.
 
+#### Synchronization
+
+* Synchronization can be performed at two levels:
+	* *System-level*: wait for all work on both the host and the device to complete.
+	* *Block-level*: wait for all threads in a thread block to reach the same point in execution on the device.
+* **cudaDeviceSynchronize()** wait for all operations (copies, kernels, and so on) have completed, also it returns errors from previous asynchronous operations.
+* Mark synchronization points in the kernel using **__device__ void __syncthreads(void);**.
