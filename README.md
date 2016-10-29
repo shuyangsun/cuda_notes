@@ -426,6 +426,7 @@ __global__ void foo() {
 * Some times warp divergence does not happen (when it should), that's because CUDA compiler optimization. It replaces branch instructions (which cause actual control flow to diverge) with predicated instructions for short, conditional code segments.
 
 ##### Branch Prediction
+
 * In branch prediction, a predicate variable for each thread is set to 1 or 0 according to a conditional. Both conditional flow paths are fully executed, but only instructions with a predicate of 1 are executed. Instructions with a predicate of 0 do not, but the corresponding thread does not stall either. The difference between this and actual branch instructions is subtle, but important to understand. The compiler replaces a branch instruction with predicted instructions only if the number of instructions in the body of a conditional statement is less than a certain threshold. Therefore, a long code path will certainly result in warp divergence.
 
 ```bash
@@ -521,3 +522,11 @@ $ nvprof --metrics gld_efficiency ./runnable_name // [percentage]% (global load 
 	* Seek a good balance among related metrics and events.
 	* Check the kernel from different angles to find a balance among the related metrics.
 	* Grid/block heuristics provide a good starting point for performance tuning.
+
+### Avoiding Branch Divergence
+
+#### The Parallel Reduction Problem
+
+* Two types of pair:
+	* *Neighbored pair*: Elements are paired with their immediate neighbor.
+	* *Interleaved pair*: Paired elements are separated by a given stride.
