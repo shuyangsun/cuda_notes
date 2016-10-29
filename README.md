@@ -513,3 +513,11 @@ $ nvprof --metrics achieved_occupancy ./runnable_name // [0, 1]
 $ nvprof --metrics gld_throughput ./runnable_name // GB/s
 $ nvprof --metrics gld_efficiency ./runnable_name // [percentage]% (global load efficiency)
 ```
+
+* Innermost dimension should always be a multiple of the warp size (regardless of the other two dimensions).
+* Metrics and performance:
+	* In most cases, no single metric can prescribe optimal performance.
+	* Which metric or event most directly relates to overall performance depends on the nature of the kernel code.
+	* Seek a good balance among related metrics and events.
+	* Check the kernel from different angles to find a balance among the related metrics.
+	* Grid/block heuristics provide a good starting point for performance tuning.
