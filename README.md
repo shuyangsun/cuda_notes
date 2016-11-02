@@ -626,7 +626,14 @@ __global__ void ReduceUnrolling8(Dtype* const g_idata,
 	}
 }
 
-/* Sample output:
+/*
+Sample output of multiple kernel implementations comparing with
+single-thread CPU implementation.
+
+Hardware:
+CPU: Intel(R) Core(TM) i7-6850K CPU @ 3.60GHz
+GPU: NVIDIA TITAN X (Pascal)
+
 Array size and type: int[1 << 24]
 Kernel Launch Configuration: <<<(262144, 1, 1), (64, 1, 1)>>>
 						 GPU Duration   Total Duration   Value
