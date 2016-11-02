@@ -530,3 +530,102 @@ $ nvprof --metrics gld_efficiency ./runnable_name // [percentage]% (global load 
 * Two types of pair:
 	* *Neighbored pair*: Elements are paired with their immediate neighbor.
 	* *Interleaved pair*: Paired elements are separated by a given stride.
+
+```cuda
+// Finished implementation of computing the sum of array of size n:
+
+void HostFunc() {
+	// The following kernel launch configuration is the most optimal one on Titan X (Pascal).
+	// Which reached gld_throughput 223GB/s. This configuration may not work as well on
+	// other hardwares.
+	dim3 const block_dim {64};
+	dim3 const grid_dim {(n + block_dim.x - 1)/block_dim.x};
+	unsigned short const unrolling_factor {8};
+	ReduceUnrolling8<int, 64><<<grid_dim.x/unrolling_factor, block_dim>>>(d_idata, d_odata, n);
+
+	// Use CPU to calculate the remaining sum
+	CheckCUDAErr(cudaMemcpy(h_odata, d_odata,
+							grid_dim.x/unrolling_factor * sizeof(int),
+							cudaMemcpyDeviceToHost));
+	int gpu_sum {0};
+	for (std::size_t i {0}; i < grid_dim.x/unrolling_factor; ++i) {
+		gpu_sum += h_odata[i];
+	}
+}
+
+template<typename Dtype, unsigned int i_block_size>
+__global__ void ReduceUnrolling8(Dtype* const g_idata, Dtype* const g_odata, std::size_t const n) {
+    // Overall index of this element
+    unsigned int const tid {threadIdx.x};
+    unsigned int const idx {tid + blockIdx.x * 8 * i_block_size};
+    unsigned int const block_idx_x {blockIdx.x};
+
+    // Get pointer for the first element of this block
+    Dtype* const idata {g_idata + block_idx_x * i_block_size * 8};
+
+    // Because blocks are scalable across multiple SMs, instead of unrolling data inside one block, we unroll data
+    // across multiple blocks (block-level parallel).
+    // Unrolling 8 data blocks
+    bool const ipred {idx + 7 * i_block_size < n};
+    if (ipred) {
+    	// WARNING: Intentional unrolling, do NOT convert to for-loop.
+    	Dtype const a0 {g_idata[idx]};
+    	Dtype const a1 {g_idata[idx + i_block_size]};
+    	Dtype const a2 {g_idata[idx + i_block_size * 2]};
+    	Dtype const a3 {g_idata[idx + i_block_size * 3]};
+    	Dtype const a4 {g_idata[idx + i_block_size * 4]};
+    	Dtype const a5 {g_idata[idx + i_block_size * 5]};
+    	Dtype const a6 {g_idata[idx + i_block_size * 6]};
+    	Dtype const a7 {g_idata[idx + i_block_size * 7]};
+    	g_idata[idx] = (a0 + a1 + a2 + a3 + a4 + a5 + a6 + a7);
+    	__syncthreads();
+    }
+
+    if (i_block_size >= 1024 && tid < 512) {
+    	idata[tid] += idata[tid + 512];
+    	__syncthreads();
+    }
+
+    if (i_block_size >= 512 && tid < 256) {
+		idata[tid] += idata[tid + 256];
+		__syncthreads();
+	}
+
+    if (i_block_size >= 256 && tid < 128) {
+		idata[tid] += idata[tid + 128];
+		__syncthreads();
+	}
+
+    if (i_block_size >= 128 && tid < 64) {
+		idata[tid] += idata[tid + 64];
+		__syncthreads();
+	}
+
+	if (tid < 32) {
+		volatile Dtype *vmem {idata};
+		vmem[tid] += vmem[tid + 32];
+		vmem[tid] += vmem[tid + 16];
+		vmem[tid] += vmem[tid + 8];
+		vmem[tid] += vmem[tid + 4];
+		vmem[tid] += vmem[tid + 2];
+		vmem[tid] += vmem[tid + 1];
+	}
+
+	// After all the reduction completed, first thread of block will copy the number to
+	// device output data (with size n/blockDim.x);
+	if (tid == 0) {
+		g_odata[block_idx_x] = idata[0];
+	}
+}
+
+/* Sample output:
+Array size and type: int[1 << 24]
+Kernel Launch Configuration: <<<(262144, 1, 1), (64, 1, 1)>>>
+CPU sum 			  :  16.59ms 		  (2139353472.00)
+Reduce Neighbored     :  13.53ms  14.21ms (2139353472.00)
+Reduce Neighbored Less:   7.32ms   7.64ms (2139353472.00)
+Reduce Interleaved    :  11.47ms  11.81ms (2139353472.00)
+Reduce Unrolling 2    :   6.15ms   6.37ms (2139353472.00)
+Reduce Unrolling 8    :   0.76ms   0.81ms (2139353472.00)
+*/
+```
