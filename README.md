@@ -636,7 +636,7 @@ GPU: NVIDIA TITAN X (Pascal)
 
 Array size and type: int[1 << 24]
 Kernel Launch Configuration: <<<(262144, 1, 1), (64, 1, 1)>>>
-						 GPU Duration   Total Duration   Value
+						 GPU Duration   Total Duration   Result
 CPU sum 			  :       	  N/A          16.59ms   2139353472
 Reduce Neighbored     :       13.53ms          14.21ms   2139353472
 Reduce Neighbored Less:        7.32ms           7.64ms   2139353472
