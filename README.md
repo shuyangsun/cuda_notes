@@ -630,11 +630,11 @@ __global__ void ReduceUnrolling8(Dtype* const g_idata,
 Array size and type: int[1 << 24]
 Kernel Launch Configuration: <<<(262144, 1, 1), (64, 1, 1)>>>
 						 GPU Duration   Total Duration   Value
-CPU sum 			  :       	  N/A          16.59ms   (2139353472.00)
-Reduce Neighbored     :       13.53ms          14.21ms   (2139353472.00)
-Reduce Neighbored Less:        7.32ms           7.64ms   (2139353472.00)
-Reduce Interleaved    :       11.47ms          11.81ms   (2139353472.00)
-Reduce Unrolling 2    :        6.15ms           6.37ms   (2139353472.00)
-Reduce Unrolling 8    :        0.76ms           0.81ms   (2139353472.00)
+CPU sum 			  :       	  N/A          16.59ms   2139353472
+Reduce Neighbored     :       13.53ms          14.21ms   2139353472
+Reduce Neighbored Less:        7.32ms           7.64ms   2139353472
+Reduce Interleaved    :       11.47ms          11.81ms   2139353472
+Reduce Unrolling 2    :        6.15ms           6.37ms   2139353472
+Reduce Unrolling 8    :        0.76ms           0.81ms   2139353472
 */
 ```
