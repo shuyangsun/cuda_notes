@@ -534,7 +534,11 @@ $ nvprof --metrics gld_efficiency ./runnable_name // [percentage]% (global load 
 ```cuda
 // Finished implementation of computing the sum of array of size n:
 
-void HostFunc() {
+int HostFunc(int* const h_odata,
+			 int* const d_idata,
+			 int* const d_odata,
+			 std::size_t const n)
+{
 	// The following kernel launch configuration is the most optimal one on Titan X (Pascal).
 	// Which reached gld_throughput 223GB/s. This configuration may not work as well on
 	// other hardwares.
@@ -551,6 +555,7 @@ void HostFunc() {
 	for (std::size_t i {0}; i < grid_dim.x/unrolling_factor; ++i) {
 		gpu_sum += h_odata[i];
 	}
+	return gpu_sum;
 }
 
 template<typename Dtype, unsigned int i_block_size>
