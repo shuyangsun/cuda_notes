@@ -559,7 +559,10 @@ int HostFunc(int* const h_odata,
 }
 
 template<typename Dtype, unsigned int i_block_size>
-__global__ void ReduceUnrolling8(Dtype* const g_idata, Dtype* const g_odata, std::size_t const n) {
+__global__ void ReduceUnrolling8(Dtype* const g_idata,
+								 Dtype* const g_odata,
+								 std::size_t const n)
+{
     // Overall index of this element
     unsigned int const tid {threadIdx.x};
     unsigned int const idx {tid + blockIdx.x * 8 * i_block_size};
