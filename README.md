@@ -2,6 +2,28 @@
 
 ___
 
+
+# Intro to Parallel Programming
+
+___
+
+## Lesson 1 - The GPU Programming Model
+
+### Map
+
+* **Map(elements, function)**: (one to one)
+* GPUs are good at map:
+	* GPUs have many parallel processors
+	* GPUs optimize for throughput
+
+## Lesson 2 - Billy Dally Interview
+
+
+
+# Professional CUDA C Programming
+
+___
+
 ## 1. Introduction
 
 ### Sequential and Parallel Programming
