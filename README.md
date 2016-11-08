@@ -20,8 +20,7 @@ ___
 
 ## Lesson 3 - GPU Hardware and Parallel Communication Patterns
 
-
-The important part of parallel computing is communication between threads.
+*The important part of parallel computing is communication between threads.
 
 * Communication patterns:
 	* Map: one-to-one
@@ -39,6 +38,9 @@ The important part of parallel computing is communication between threads.
 * Common transpose between:
 	* AOS: array of structures
 	* Structure of arrays
+
+* GPU is responsible for allocating blocks to SMs.
+* All threads run in parallel and independently.
 
 # Professional CUDA C Programming
 
