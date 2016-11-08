@@ -15,9 +15,20 @@ ___
 * GPUs are good at map:
 	* GPUs have many parallel processors
 	* GPUs optimize for throughput
+* Convert image to BW, taking human eye's color sensitivity into account:
+	* I = 0.299f * r + 0.587f * g + 0.114f * b;
 
-## Lesson 2 - Billy Dally Interview
+## Lesson 3 - GPU Hardware and Parallel Communication Patterns
 
+
+The important part of parallel computing is communication between threads.
+
+* Communication patterns:
+	* Map: one-to-one
+	* Gather: many-to-one
+	* Scatter: one-to-many
+	* Stencil: one-to-many (to neighbors)
+	* 
 
 
 # Professional CUDA C Programming
