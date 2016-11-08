@@ -27,9 +27,14 @@ The important part of parallel computing is communication between threads.
 	* Map: one-to-one
 	* Gather: many-to-one
 	* Scatter: one-to-many
-	* Stencil: one-to-many (to neighbors)
-	* 
-
+	* Stencil: many-to-one (from neighbors)
+	* Transpose: one-to-one
+* Types of stencils:
+	* Von Neumann Stencil
+	* Moore Stencil
+* Common transpose between:
+	* AOS: array of structures
+	* Structure of arrays
 
 # Professional CUDA C Programming
 
