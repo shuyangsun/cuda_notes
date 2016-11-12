@@ -3,7 +3,7 @@
 ___
 
 
-# Intro to Parallel Programming
+# Intro to Parallel Programming - Udacity
 
 ___
 
@@ -59,7 +59,7 @@ ___
 
 ### Synchronization
 
-* *Barrier*: point in the program where threads stop and wait, when **all** threads in the block have reached barrier, they can proceed.
+* *Barrier*: point in the program where threads stop and wait, when *all* threads in the block have reached barrier, they can proceed.
 * There is an implicit barrier between kernels.
 * CUDA is a hierarchy of computation, memory space, and synchronization.
 
@@ -68,8 +68,26 @@ ___
 * High-level strategy - maximize arithmetic intensity (math/memory):
 	* Maximize *computing operations* per thread
 	* Minimizing *time spent on* memory per thread.
-* Minimize time spent on memory:
-	
+
+#### Minimize Time Spent on Memory
+
+* Move frequent-accessed data to fast memory.
+* In terms of memory speed: local > shared >> global >> host.
+	* Local memory ususally lives in registers or L1 cache.
+
+```cuda
+__global__ void LocalMemKernel(float const h_in) {
+  // Variable "f" is in local memory and private to each thread.
+  // Parameters like "h_in" is also in local memory.
+	float const f{h_in};
+	// ...
+}
+
+__global__ void GlobalMemKernel(float* const d_data) {
+	// "d_data" is a pointer to global memory on the device.
+	d_data[threadIdx.x] = 2.0f * static_cast<float>(threadIdx.x);
+}
+```
 
 ___
 
