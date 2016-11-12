@@ -42,9 +42,38 @@ ___
 * GPU is responsible for allocating blocks to SMs.
 * All threads run in parallel and independently.
 
-# Professional CUDA C Programming
+### CUDA Guarantees
+
+* CUDA makes few guarantees, this allows scalability.
+* No communication between blocks guarantees there is no deadlock caused by this.
+* Threads, blocks must complete.
+* All blocks in a kernel finishes before the next kernel run.
+
+### GPU Memory Model
+
+* *Local memory*: per-thread. Every thread has a local memory, which is private to that thread to read/write.
+* *Shared memory*: per-block. Threads in a thread block have access to shared memory, all threads in a thread block can read/write to it. Shared memory directly sits on each SM.
+* *Global memory*: all threads. Accessible to all threads from all blocks.
+* *Host memory*: CPU memory.
+
+
+### Synchronization
+
+* *Barrier*: point in the program where threads stop and wait, when **all** threads in the block have reached barrier, they can proceed.
+* There is an implicit barrier between kernels.
+* CUDA is a hierarchy of computation, memory space, and synchronization.
+
+### Writting Efficient Progarm
+
+* High-level strategy - maximize arithmetic intensity (math/memory):
+	* Maximize *computing operations* per thread
+	* Minimizing *time spent on* memory per thread.
+* Minimize time spent on memory:
+	
 
 ___
+
+# Professional CUDA C Programming
 
 ## 1. Introduction
 
