@@ -106,6 +106,33 @@ __global__ void SharedMemKernel(float* const d_data) {
 }
 ```
 
+##### Coalesce Memory Access
+
+* Coalesce global memory access.
+* GPU access a large chunk of memory even if each thread only needs a small part of it.
+* The above determines that GPU is most efficient when threads read or write *contigous* memory locations.
+
+### Atomic Memory Operations
+
+* **atomicAdd()**, **atomicMin()**, **atomicCAS()** (compare and swap), etc.
+
+```cuda
+__global__ void IncrementAtomicKernel(int* const d_data, size_t size) {
+  unsigned int const idx{blockIdx.x * blockDim.x + threadIdx.x};
+
+  atomicAdd(&d_data[idx % size], 1);  // Use GPU special hardware to perform atomic operation
+}
+```
+
+* Atomic operation limitations:
+  * Only certain operations, data types are supported (can work around data type limitation by using **atomicCAS()** and mutex, switches).
+  * Still no ordering constraints.
+  * Still serializes access to memory (which is slow).
+
+### Thread Divergence
+
+* Conditions and loops can both cause thread divergence.
+
 ___
 
 # Professional CUDA C Programming
