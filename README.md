@@ -13,31 +13,31 @@ ___
 
 * **Map(elements, function)**: (one to one)
 * GPUs are good at map:
-	* GPUs have many parallel processors
-	* GPUs optimize for throughput
+  * GPUs have many parallel processors
+  * GPUs optimize for throughput
 * Convert image to BW, taking human eye's color sensitivity into account:
-	* I = 0.299f * r + 0.587f * g + 0.114f * b;
+  * I = 0.299f * r + 0.587f * g + 0.114f * b;
 
 ## Lesson 3 - GPU Hardware and Parallel Communication Patterns
 
 *The important part of parallel computing is communication between threads.
 
 * Communication patterns:
-	* Map: one-to-one
-	* Gather: many-to-one
-	* Scatter: one-to-many
-	* Stencil: several-to-one (from neighbors)
-	* Transpose: one-to-one
-	* Reduce: all-to-one
-	* Scan/Sort: all-to-all
+  * Map: one-to-one
+  * Gather: many-to-one
+  * Scatter: one-to-many
+  * Stencil: several-to-one (from neighbors)
+  * Transpose: one-to-one
+  * Reduce: all-to-one
+  * Scan/Sort: all-to-all
 
 * Types of stencils:
-	* Von Neumann Stencil
-	* Moore Stencil
+  * Von Neumann Stencil
+  * Moore Stencil
 
 * Common transpose between:
-	* AOS: array of structures
-	* Structure of arrays
+  * AOS: array of structures
+  * Structure of arrays
 
 * GPU is responsible for allocating blocks to SMs.
 * All threads run in parallel and independently.
@@ -66,14 +66,14 @@ ___
 ### Writting Efficient Progarm
 
 * High-level strategy - maximize arithmetic intensity (math/memory):
-	* Maximize *computing operations* per thread
-	* Minimizing *time spent on* memory per thread.
+  * Maximize *computing operations* per thread
+  * Minimizing *time spent on* memory per thread.
 
 #### Minimize Time Spent on Memory
 
 * Move frequent-accessed data to fast memory.
 * In terms of memory speed: local > shared >> global >> host.
-	* Local memory ususally lives in registers or L1 cache.
+  * Local memory ususally lives in registers or L1 cache.
 
 ```cuda
 __global__ void LocalMemKernel(float const h_in) {
@@ -86,6 +86,23 @@ __global__ void LocalMemKernel(float const h_in) {
 __global__ void GlobalMemKernel(float* const d_data) {
   // "d_data" is a pointer to global memory on the device.
   d_data[threadIdx.x] = 2.0f * static_cast<float>(threadIdx.x);
+}
+
+// Assume "d_data" has 128 elements.
+__global__ void SharedMemKernel(float* const d_data) {
+  // "d_data" is a pointer to global memory on the device.
+
+  size_t const idx{blockIdx.x * blockDim.x + threadIdx.x};
+
+  // __shared__ variables are visible to all threads in the thread block
+  // and have the same life time as the thread block.
+  __shared__ float* const sh_data[128];
+
+  sh_data[idx] = d_data[idx];
+
+  __syncthreads();  // ensures all writes to shared memory have completed
+
+  // Do something with "sh_data" ...
 }
 ```
 
@@ -102,8 +119,8 @@ ___
 ### Parallelism
 
 * Two fundamental types of parallelism:
-	1. Task parallelism: when there are many data items that can be operated on at the same time. Focuses on distributing functions across multiple cores.
-	2. Data parallelism (what CUDA focuses on): when there are many data items that can be operated on at the same time. Focuses on distributing the data across multiple cores.
+  1. Task parallelism: when there are many data items that can be operated on at the same time. Focuses on distributing functions across multiple cores.
+  2. Data parallelism (what CUDA focuses on): when there are many data items that can be operated on at the same time. Focuses on distributing the data across multiple cores.
 
 * Even when a logical multi-dimensional view of data is used, it still maps to one-dimensional physical storage.
 * Two ways of partitioning memory: *block partition* and *cyclic partition*.
@@ -112,15 +129,15 @@ ___
 ### Computer Architecture
 
 * Four main architectures:
-	* Single Instruction Single Data (SISD)
-	* Single Instruction Multiple Data (SIMD)
-	* Multiple Instruction Single Data (MISD)
-	* Multiple Instruction Multiple Data (MIMD)
+  * Single Instruction Single Data (SISD)
+  * Single Instruction Multiple Data (SIMD)
+  * Multiple Instruction Single Data (MISD)
+  * Multiple Instruction Multiple Data (MIMD)
 
 * On architectural level, they are trying to: decrease latency, increase bandwidth, increase throughput
-	* *Latency*: the time it takes for an operation to start and complete, and is commonly expressed in microseconds.
-	* *Bandwidth*: the amount of data that can be processed per unit of time, commonly expressed as megabytes/sec or gigabytes/sec.
-	* *Throughput*: the amount of operations that can be processed per unit of time, commonly expressed as *gflops*.
+  * *Latency*: the time it takes for an operation to start and complete, and is commonly expressed in microseconds.
+  * *Bandwidth*: the amount of data that can be processed per unit of time, commonly expressed as megabytes/sec or gigabytes/sec.
+  * *Throughput*: the amount of operations that can be processed per unit of time, commonly expressed as *gflops*.
 
 * A multi-node system is often referred to as *clusters*.
 * Single Instruction Multiple Thread (**SIMT**): NVIDIA's term for the combination of all four main architectures.
@@ -149,37 +166,37 @@ ___
 #include <cstdio>
 
 __global__ void helloFromGPU(void) {
-	char str[] {"Hello from GPU!"};
-	printf("%s (thread %d)\n", str, threadIdx.x);
+  char str[] {"Hello from GPU!"};
+  printf("%s (thread %d)\n", str, threadIdx.x);
 }
 
 int main(int argc, const char* argv[]) {
 
-	// Triple angle brackets mark a call from the host thread to the code on the device side.
-	// A kernel's executed by an array of threads and all threads run the same code.
+  // Triple angle brackets mark a call from the host thread to the code on the device side.
+  // A kernel's executed by an array of threads and all threads run the same code.
 
-	helloFromGPU<<<1, 5>>>(); // Call helloFromGPU 5 times on GPU
+  helloFromGPU<<<1, 5>>>(); // Call helloFromGPU 5 times on GPU
 
-	// Explicitly destroy and clean up all resources associated with the current device in the current process.
-	cudaDeviceReset();
+  // Explicitly destroy and clean up all resources associated with the current device in the current process.
+  cudaDeviceReset();
 
-	return 0;
+  return 0;
 }
 
 // Compile with "nvcc -arch sm_61 hello.cu -o hello".
 // "-arch sm_<computing capability>" is to compile for a specific architecture.
 ```
 * **CUDA Programing Structure**:
-	1. Allocate GPU memories.
-	2. Copy data from CPU memory to GPU memory.
-	3. Invoke the CUDA kernel to perform program-specific computation.
-	4. Copy data back from GPU memory to CPU memory.
-	5. Destroy GPU memories.
+  1. Allocate GPU memories.
+  2. Copy data from CPU memory to GPU memory.
+  3. Invoke the CUDA kernel to perform program-specific computation.
+  4. Copy data back from GPU memory to CPU memory.
+  5. Destroy GPU memories.
 
 ### Is CUDA Programming Difficult?
 * *Locality*: the reuse of data so as to reduce memory access latency.
-	* **Temporal locality**: the reused of data/resources within relatively small time durations.
-	* **Spatial locality**: the reused of data/resources within relatively close storage locations.
+  * **Temporal locality**: the reused of data/resources within relatively small time durations.
+  * **Spatial locality**: the reused of data/resources within relatively close storage locations.
 * CUDA exposes both thread and memory hierarchy to programmer. (e.g., *shared memory*: software-managed cache)
 * Three key abstractions: a hierarchy of thread groups, a hierarchy of memory groups, and barrier synchronization.
 
@@ -190,13 +207,13 @@ ___
 ### Introducing the CUDA Programming Model
 
 * CUDA special features:
-	* Organize threads on the GPU through a hierarchy structure
-	* Access memory on the GPU through a hierarchy structure
+  * Organize threads on the GPU through a hierarchy structure
+  * Access memory on the GPU through a hierarchy structure
 
 * View parallel computing on different levels:
-	* Domain level
-	* Logic level
-	* Hardware level
+  * Domain level
+  * Logic level
+  * Hardware level
 
 ### CUDA Programming Structure
 
@@ -232,8 +249,8 @@ cudaError_t cudaFree(void* devPtr);
 char *cudaGetErrorString(cudaError_t error);
 ```
 * In the GPU memory hierarchy, the two most important types of memory are *global memory* and *shared memory*. (Both global and shared memory are on GPU)
-	* Global memory is analogous to CPU system memory.
-	* Shared memory is similar to the CPU cache, can be directly controlled from a CUDA C kernel.
+  * Global memory is analogous to CPU system memory.
+  * Shared memory is similar to the CPU cache, can be directly controlled from a CUDA C kernel.
 
 ### Organizing Threads
 
@@ -245,15 +262,15 @@ char *cudaGetErrorString(cudaError_t error);
 * All threads in a grid share the same global memory space.
 * A grid is made up of many thread blocks.
 * A thread block is a group of threads that can cooperate with each other using:
-	* Block-local synchronization
-	* Block-local shared memory
+  * Block-local synchronization
+  * Block-local shared memory
 * Threads from different blocks cannot cooperate.
 
 #### Threads Organization
 
 * Threads rely on the following two unique coordinates to distinguish themselves from each other:
-	* **blockIdx**: block index within a grid
-	* **threadIdx**: thread index within a block
+  * **blockIdx**: block index within a grid
+  * **threadIdx**: thread index within a block
 * These variables are built-in, pre-initialized variables that can be accessed within kernel functions.
 
 * The coordinate variable is of type **uint3**, a CUDA built-in vector type. The three elements can be accessed through **x**, **y**, and **z** respectively.
@@ -275,13 +292,13 @@ unsigned int tId_z {threadIdx.z};
 #### Grids and Blocks Organization
 
 * CUDA organizes grids and blocks in three dimensions. The dimensions of a grid and a block are specified by the following two built-in variables:
-	* **blockDim**: block dimension, measured in threads
-	* **gridDim**: grid dimension, measured in blocks
+  * **blockDim**: block dimension, measured in threads
+  * **gridDim**: grid dimension, measured in blocks
 * These variables are of type **dim3**. Use **x**, **y**, and **z** to access respectively.
 * There are two distinct sets of grid and block variables in a CUDA program: manually-defined **dim3** data type and pre-defined **uint3** data type:
-	* On the host side, you define the dimensions of a grid and block using **dim3** data type as part of a kernel invocation.
-	* When the kernel is executing, the CUDA runtime generates the corresponding built-in, pre-initialized grid, block, and thread variables, which are accessible within the kernel function and have type **uint3**.
-	* The manually created **dim3** variables are only visible on the host side; the built-in **uint3** variables are only visible on the device side.
+  * On the host side, you define the dimensions of a grid and block using **dim3** data type as part of a kernel invocation.
+  * When the kernel is executing, the CUDA runtime generates the corresponding built-in, pre-initialized grid, block, and thread variables, which are accessible within the kernel function and have type **uint3**.
+  * The manually created **dim3** variables are only visible on the host side; the built-in **uint3** variables are only visible on the device side.
 
 | Host           | Device              |
 | -------------- | ------------------- |
@@ -318,11 +335,11 @@ threadIdx (2, 0, 0) blockIdx (1, 0, 0) blockDim (3, 1, 1) gridDim (2, 1, 1)
 */
 ```
 * For a given data size, the general steps to determine the grid and block dimensions are:
-	* Decide the block size.
-	* Calculate the grid dimension based on the application data size and the block size.
+  * Decide the block size.
+  * Calculate the grid dimension based on the application data size and the block size.
 * To determine the block dimension, you usually need to consider:
-	* Performance characteristics of the kernel
-	* Limitations on GPU resources
+  * Performance characteristics of the kernel
+  * Limitations on GPU resources
 
 ### Launching a CUDA Kernel
 
@@ -344,12 +361,12 @@ __global__ void kernel_name(/* argument list */);
 
 * The **\__device__** and **\__host__** qualifiers can be used together, in which case the function is compiled for both the host and the device.
 * Restrictions for CUDA kernel functions:
-	* Access to device memory only
-	* Must have **void** return type
-	* No support for a variable number of arguments
-	* No support for **static** variables
-	* No support for function pointers
-	* Exhibit an asynchronous behavior
+  * Access to device memory only
+  * Must have **void** return type
+  * No support for a variable number of arguments
+  * No support for **static** variables
+  * No support for function pointers
+  * Exhibit an asynchronous behavior
 
 ### Handling Errors
 
@@ -357,13 +374,13 @@ __global__ void kernel_name(/* argument list */);
 
 ```cuda
 __host__ inline void check_err(const std::initializer_list<const cudaError_t>& errors) {
-	#pragma unroll
-	for (auto err: errors) {
-		if (err != cudaSuccess) {
-			fprintf(stderr, "%s\n", cudaGetErrorString(err));
-			throw customized_cuda_exception {"Info about error..."};
-		}
-	}
+  #pragma unroll
+  for (auto err: errors) {
+    if (err != cudaSuccess) {
+      fprintf(stderr, "%s\n", cudaGetErrorString(err));
+      throw customized_cuda_exception {"Info about error..."};
+    }
+  }
 }
 ```
 
@@ -374,11 +391,11 @@ __host__ inline void check_err(const std::initializer_list<const cudaError_t>& e
 ```cuda
 // How to get device information
 __host__ inline void print_device_info(void) {
-	unsigned int device_idx {0};
-	cudaDeviceProp device_prop {};
-	cudaGetDeviceProperties(&device_prop, device_idx);
-	std::cout << "Using device " << device_idx << ": " << device_prop.name << " ";
-	std::cout << "with " << device_prop.multiProcessorCount << " SM units" << std::endl;
+  unsigned int device_idx {0};
+  cudaDeviceProp device_prop {};
+  cudaGetDeviceProperties(&device_prop, device_idx);
+  std::cout << "Using device " << device_idx << ": " << device_prop.name << " ";
+  std::cout << "with " << device_prop.multiProcessorCount << " SM units" << std::endl;
 }
 ```
 
@@ -419,9 +436,9 @@ $ nvprof ./runnable_name
 * CUDA employs a *Single Instruction Multiple Thread* (SIMT) architecture to manage and execute threads in groups of 32 called *warps*. All threads in a warp execute the same instruction at the same time. Each thread has its own instruction address counter and register state, and carries out the current instruction on its own data. Each SM partitions the thread blocks assigned to it into 32-thread warps that it then schedules for execution on available hardware resources.
 * A key difference between SIMD and SIMT is that, SIMD requires that all vector elements in a vector execute together in a unified synchronous group, whereas SIMT allows multiple threads in the same warp to execute independently. Even though all threads in a warp start together at the same program address, it is possible for individual threads to have different behavior.
 * The SIMT model includes three key features that SIMD does not:
-	* Each thread has its own instruction address counter.
-	* Each thread has its own register state.
-	* Each thread can have an independent execution path.
+  * Each thread has its own instruction address counter.
+  * Each thread has its own register state.
+  * Each thread can have an independent execution path.
 * The number 32 is a magic number in CUDA programming. It comes from hardware, and has a significant impact on the performance of software.
 * A thread block is scheduled on only one SM. Once a thread block is scheduled on an SM, it remains there until execution completes. An SM can hold more than one thread block at the same time.
 * Shared memory and registers are precious resources in an SM. Shared memory is partitioned among thread blocks resident on the SM and registers are partitioned among threads. Threads in a thread block can cooperate and communicate with each other through these resources. While all threads in a thread block run logically in parallel, not all threads can execute physically at the same time. As a result, different threads in a thread block may make progress at a different pace.
@@ -431,10 +448,10 @@ $ nvprof ./runnable_name
 #### The Fermi Architecture:
 
 * Some terminologies:
-	* LD/ST: load/store unit
-	* ALU: arithmetic logic unit
-	* FPU: floating-point unit (executes one integer or floating point instruction per clock cycle)
-	* SFU: special function unit (sin, cos, etc.)
+  * LD/ST: load/store unit
+  * ALU: arithmetic logic unit
+  * FPU: floating-point unit (executes one integer or floating point instruction per clock cycle)
+  * SFU: special function unit (sin, cos, etc.)
 
 ![alt text][fermi_arch]
 [fermi_arch]: resources/Fermi_architecture.png "Fermi Architecture"
@@ -446,9 +463,9 @@ $ nvprof ./runnable_name
 #### The Kepler Architecture
 
 * New features in Kepler:
-	* Enhanced SMs
-	* Dynamic Parallelism: launch another kernel within a kernel
-	* Hyper-Q: enabling CPU cores to simultaneously run more tasks on the GPU.
+  * Enhanced SMs
+  * Dynamic Parallelism: launch another kernel within a kernel
+  * Hyper-Q: enabling CPU cores to simultaneously run more tasks on the GPU.
 
 ![alt text][kepler_arch_01]
 [kepler_arch_01]: resources/kepler_01.jpg "Kepler Architecture"
@@ -462,16 +479,16 @@ $ nvprof ./runnable_name
 ### Profile-Driven Optimization
 
 * Profiling is the act of analyzing program performance by measuring:
-	* The space (memory) or time complexity of application code
-	* The use of particular instructions
-	* The frequency and duration of function calls
+  * The space (memory) or time complexity of application code
+  * The use of particular instructions
+  * The frequency and duration of function calls
 * CUDA provides two primary profiling tools:
-	* **nvvp**: a standalone visual profiler
-	* **nvprof**: a command-line profiler
+  * **nvvp**: a standalone visual profiler
+  * **nvprof**: a command-line profiler
 * Three common limiters to performance for a kernel:
-	* Memory bandwidth
-	* Compute resources
-	* Instruction and memory latency
+  * Memory bandwidth
+  * Compute resources
+  * Instruction and memory latency
 
 ### Understanding the Nature of Warp Execution
 
@@ -499,11 +516,11 @@ const int idx_3d = (threadIdx.z * threadIdx.y * threadIdx.x) + (threadIdx.y * th
 ```cuda
 // Example
 __global__ void foo() {
-	if (condition) {
-		// some threads will execute this block of code
-	} else {
-		// some threads will execute this one instead
-	}
+  if (condition) {
+    // some threads will execute this block of code
+  } else {
+    // some threads will execute this one instead
+  }
 }
 // contradict with the rule that all threads must run the same code
 ```
@@ -528,21 +545,21 @@ $ nvprof --events branch,divergent_branch ./runnable-name # Check branch counter
 #### Resource Partitioning
 
 * The local execution context of a warp mainly consists of the following resources:
-	* Program counters
-	* Registers
-	* Shared memory
+  * Program counters
+  * Registers
+  * Shared memory
 
 * The execution context of each warp processed by an SM is maintained on-chip during the entire lifetime of the warp. Therefore, switching from one execution context to another has no cost.
 * Changing the number of registers and the amount of shared memory required by the kernel, can change the number of blocks and warps that can simultaneously reside on an SM.
 * If there are insufficient registers or shared memory on each SM to process at least one block, the kernel launch will fail.
 * A thread block is called an *active block* when compute resources such as registers and shared memory, have been allocated to it. The warps it contains are called *active warps*. Active warps can be further classified into the following three types:
-	* Selected warp: actively executing
-	* Stalled warp: ready for execution but not currently executing
-	* Eligible warp: not ready for execution
+  * Selected warp: actively executing
+  * Stalled warp: ready for execution but not currently executing
+  * Eligible warp: not ready for execution
 * The warp scheduler on an SM select active warps on every cycle and dispatch them to execution units.
 * A warp is eligible for execution if both of the following two conditions are met:
-	* 32 CUDA cores are available for execution.
-	* All arguments to the current instruction are ready.
+  * 32 CUDA cores are available for execution.
+  * All arguments to the current instruction are ready.
 * On Kepler SM, the number of active warps is limited to 64, and the number of selected warps at any cycle is less than or equal to 4.
 * The compute resources limit the number of active warps. Therefore, you must be aware of the restrictions imposed by the hardware, and the resources used by your kernel. In order to maximize GPU utilization, you need to maximize the number of active warps.
 
@@ -551,36 +568,36 @@ $ nvprof --events branch,divergent_branch ./runnable-name # Check branch counter
 * The number of clock cycles between an instruction being issued and being completed is defined as *instruction latency*.
 * Full compute resource utilization is achieved when all warp schedulers have an eligible warp at every clock cycle. This ensures the latency of each instruction can be hidden by issuing other instructions in other resident warps.
 * Two types of instructions (which could have latency):
-	* Arithmetic instructions
-	* Memory instructions
+  * Arithmetic instructions
+  * Memory instructions
 * Two types of latency:
-	* Arithmetic latency: the time between an arithmetic operation starting and its output being produced. (10-20 cycles)
-	* Memory instructions: the time between a load or store operation being issued and the data arriving its destination. (400-800 cycles)
+  * Arithmetic latency: the time between an arithmetic operation starting and its output being produced. (10-20 cycles)
+  * Memory instructions: the time between a load or store operation being issued and the data arriving its destination. (400-800 cycles)
 * Use *Little's Law* to estimate the number of active warps required to hide latency:
-	* num_warps_needed_to_hide_latency = avg_instruction_latency * through_output_of_warps_per_cycle
+  * num_warps_needed_to_hide_latency = avg_instruction_latency * through_output_of_warps_per_cycle
 * Two ways to increase parallelism:
-	* *Instruction-level parallelism (ILP)*: Most independent instructions within a thread
-	* *Thread-level parallelism (TLP)*: More concurrently eligible threads
+  * *Instruction-level parallelism (ILP)*: Most independent instructions within a thread
+  * *Thread-level parallelism (TLP)*: More concurrently eligible threads
 * Choosing an optimal execution configuration is a matter of striking a balance between latency hiding and resource utilization.
 
 #### Occupancy
 * *Occupancy* is the ratio of active warps to maximum number of warps, per SM.
 * Use *CUDA Occupancy Calculator* to select grid and block dimensions to maximize occupancy for a kernel.
 * Manipulating thread blocks to either extreme can restrict resource utilization:
-	* Small thread blocks: too few threads per block leads to hardware limits on the number of warps per SM to be reached before all resources are fully utilized.
-	* Large thread blocks: too many threads per block leads to fewer per-SM hardware resources available to each thread.
+  * Small thread blocks: too few threads per block leads to hardware limits on the number of warps per SM to be reached before all resources are fully utilized.
+  * Large thread blocks: too many threads per block leads to fewer per-SM hardware resources available to each thread.
 * Guidelines for Grid and Block Size:
-	* Keep the number of threads per block a multiple of warp size (32).
-	* Avoid small block sizes: Start with at least 128 or 256 threads per block.
-	* Adjust block size up or down according to kernel resource requirements.
-	* Keep the number of blocks much greater than the number of SMs to expose sufficient parallelism to your device.
-	* Conduct experiments to discover the best execution configuration and resource usage.
+  * Keep the number of threads per block a multiple of warp size (32).
+  * Avoid small block sizes: Start with at least 128 or 256 threads per block.
+  * Adjust block size up or down according to kernel resource requirements.
+  * Keep the number of blocks much greater than the number of SMs to expose sufficient parallelism to your device.
+  * Conduct experiments to discover the best execution configuration and resource usage.
 
 #### Synchronization
 
 * Synchronization can be performed at two levels:
-	* *System-level*: wait for all work on both the host and the device to complete.
-	* *Block-level*: wait for all threads in a thread block to reach the same point in execution on the device.
+  * *System-level*: wait for all work on both the host and the device to complete.
+  * *Block-level*: wait for all threads in a thread block to reach the same point in execution on the device.
 * **cudaDeviceSynchronize()** wait for all operations (copies, kernels, and so on) have completed, also it returns errors from previous asynchronous operations.
 * Mark synchronization points in the kernel using **__device__ void __syncthreads(void);**.
 * When **__syncthreads** is called, each thread in the same thread block must wait until all other threads in that thread block have reached this synchronization point. All global and shared memory accesses made by all threads prior to this barrier will be visible to all other threads in the thread block after the barrier.
@@ -592,8 +609,8 @@ $ nvprof --events branch,divergent_branch ./runnable-name # Check branch counter
 * Real scalability depends on algorithm design and hardware features.
 * The ability to execute the same application code on a varying number of compute cores is referred to as *transparent scalability*.
 * Scalability can be more important than efficiency.
-	* A scalable but inefficient system can handle larger workloads by simply adding hardware cores.
-	* An efficient but un-scalable system may quickly reach an upper limit on achievable performance.
+  * A scalable but inefficient system can handle larger workloads by simply adding hardware cores.
+  * An efficient but un-scalable system may quickly reach an upper limit on achievable performance.
 
 ### Exposing Parallelism
 
@@ -608,51 +625,51 @@ $ nvprof --metrics gld_efficiency ./runnable_name // [percentage]% (global load 
 
 * Innermost dimension should always be a multiple of the warp size (regardless of the other two dimensions).
 * Metrics and performance:
-	* In most cases, no single metric can prescribe optimal performance.
-	* Which metric or event most directly relates to overall performance depends on the nature of the kernel code.
-	* Seek a good balance among related metrics and events.
-	* Check the kernel from different angles to find a balance among the related metrics.
-	* Grid/block heuristics provide a good starting point for performance tuning.
+  * In most cases, no single metric can prescribe optimal performance.
+  * Which metric or event most directly relates to overall performance depends on the nature of the kernel code.
+  * Seek a good balance among related metrics and events.
+  * Check the kernel from different angles to find a balance among the related metrics.
+  * Grid/block heuristics provide a good starting point for performance tuning.
 
 ### Avoiding Branch Divergence
 
 #### The Parallel Reduction Problem
 
 * Two types of pair:
-	* *Neighbored pair*: Elements are paired with their immediate neighbor.
-	* *Interleaved pair*: Paired elements are separated by a given stride.
+  * *Neighbored pair*: Elements are paired with their immediate neighbor.
+  * *Interleaved pair*: Paired elements are separated by a given stride.
 
 ```cuda
 // Finished implementation of computing the sum of array of size n:
 
 int HostFunc(int* const h_odata,
-			 int* const d_idata,
-			 int* const d_odata,
-			 std::size_t const n)
+       int* const d_idata,
+       int* const d_odata,
+       std::size_t const n)
 {
-	// The following kernel launch configuration is the most optimal one on Titan X (Pascal).
-	// Which reached gld_throughput 223GB/s. This configuration may not work as well on
-	// other hardwares.
-	dim3 const block_dim {64};
-	dim3 const grid_dim {(n + block_dim.x - 1)/block_dim.x};
-	unsigned short const unrolling_factor {8};
-	ReduceUnrolling8<int, 64><<<grid_dim.x/unrolling_factor, block_dim>>>(d_idata, d_odata, n);
+  // The following kernel launch configuration is the most optimal one on Titan X (Pascal).
+  // Which reached gld_throughput 223GB/s. This configuration may not work as well on
+  // other hardwares.
+  dim3 const block_dim {64};
+  dim3 const grid_dim {(n + block_dim.x - 1)/block_dim.x};
+  unsigned short const unrolling_factor {8};
+  ReduceUnrolling8<int, 64><<<grid_dim.x/unrolling_factor, block_dim>>>(d_idata, d_odata, n);
 
-	// Use CPU to calculate the remaining sum
-	CheckCUDAErr(cudaMemcpy(h_odata, d_odata,
-							grid_dim.x/unrolling_factor * sizeof(int),
-							cudaMemcpyDeviceToHost));
-	int gpu_sum {0};
-	for (std::size_t i {0}; i < grid_dim.x/unrolling_factor; ++i) {
-		gpu_sum += h_odata[i];
-	}
-	return gpu_sum;
+  // Use CPU to calculate the remaining sum
+  CheckCUDAErr(cudaMemcpy(h_odata, d_odata,
+              grid_dim.x/unrolling_factor * sizeof(int),
+              cudaMemcpyDeviceToHost));
+  int gpu_sum {0};
+  for (std::size_t i {0}; i < grid_dim.x/unrolling_factor; ++i) {
+    gpu_sum += h_odata[i];
+  }
+  return gpu_sum;
 }
 
 template<typename Dtype, unsigned int i_block_size>
 __global__ void ReduceUnrolling8(Dtype* const g_idata,
-								 Dtype* const g_odata,
-								 std::size_t const n)
+                 Dtype* const g_odata,
+                 std::size_t const n)
 {
     // Overall index of this element
     unsigned int const tid {threadIdx.x};
@@ -667,54 +684,54 @@ __global__ void ReduceUnrolling8(Dtype* const g_idata,
     // Unrolling 8 data blocks
     bool const ipred {idx + 7 * i_block_size < n};
     if (ipred) {
-    	// WARNING: Intentional unrolling, do NOT convert to for-loop.
-    	Dtype const a0 {g_idata[idx]};
-    	Dtype const a1 {g_idata[idx + i_block_size]};
-    	Dtype const a2 {g_idata[idx + i_block_size * 2]};
-    	Dtype const a3 {g_idata[idx + i_block_size * 3]};
-    	Dtype const a4 {g_idata[idx + i_block_size * 4]};
-    	Dtype const a5 {g_idata[idx + i_block_size * 5]};
-    	Dtype const a6 {g_idata[idx + i_block_size * 6]};
-    	Dtype const a7 {g_idata[idx + i_block_size * 7]};
-    	g_idata[idx] = (a0 + a1 + a2 + a3 + a4 + a5 + a6 + a7);
-    	__syncthreads();
+      // WARNING: Intentional unrolling, do NOT convert to for-loop.
+      Dtype const a0 {g_idata[idx]};
+      Dtype const a1 {g_idata[idx + i_block_size]};
+      Dtype const a2 {g_idata[idx + i_block_size * 2]};
+      Dtype const a3 {g_idata[idx + i_block_size * 3]};
+      Dtype const a4 {g_idata[idx + i_block_size * 4]};
+      Dtype const a5 {g_idata[idx + i_block_size * 5]};
+      Dtype const a6 {g_idata[idx + i_block_size * 6]};
+      Dtype const a7 {g_idata[idx + i_block_size * 7]};
+      g_idata[idx] = (a0 + a1 + a2 + a3 + a4 + a5 + a6 + a7);
+      __syncthreads();
     }
 
     if (i_block_size >= 1024 && tid < 512) {
-    	idata[tid] += idata[tid + 512];
-    	__syncthreads();
+      idata[tid] += idata[tid + 512];
+      __syncthreads();
     }
 
     if (i_block_size >= 512 && tid < 256) {
-		idata[tid] += idata[tid + 256];
-		__syncthreads();
-	}
+    idata[tid] += idata[tid + 256];
+    __syncthreads();
+  }
 
     if (i_block_size >= 256 && tid < 128) {
-		idata[tid] += idata[tid + 128];
-		__syncthreads();
-	}
+    idata[tid] += idata[tid + 128];
+    __syncthreads();
+  }
 
     if (i_block_size >= 128 && tid < 64) {
-		idata[tid] += idata[tid + 64];
-		__syncthreads();
-	}
+    idata[tid] += idata[tid + 64];
+    __syncthreads();
+  }
 
-	if (tid < 32) {
-		volatile Dtype *vmem {idata};
-		vmem[tid] += vmem[tid + 32];
-		vmem[tid] += vmem[tid + 16];
-		vmem[tid] += vmem[tid + 8];
-		vmem[tid] += vmem[tid + 4];
-		vmem[tid] += vmem[tid + 2];
-		vmem[tid] += vmem[tid + 1];
-	}
+  if (tid < 32) {
+    volatile Dtype *vmem {idata};
+    vmem[tid] += vmem[tid + 32];
+    vmem[tid] += vmem[tid + 16];
+    vmem[tid] += vmem[tid + 8];
+    vmem[tid] += vmem[tid + 4];
+    vmem[tid] += vmem[tid + 2];
+    vmem[tid] += vmem[tid + 1];
+  }
 
-	// After all the reduction completed, first thread of block will copy the number to
-	// device output data (with size n/blockDim.x);
-	if (tid == 0) {
-		g_odata[block_idx_x] = idata[0];
-	}
+  // After all the reduction completed, first thread of block will copy the number to
+  // device output data (with size n/blockDim.x);
+  if (tid == 0) {
+    g_odata[block_idx_x] = idata[0];
+  }
 }
 
 /*
@@ -727,8 +744,8 @@ GPU: NVIDIA TITAN X (Pascal)
 
 Array size and type: int[1 << 24]
 Kernel Launch Configuration: <<<(262144, 1, 1), (64, 1, 1)>>>
-						 GPU Duration   Total Duration   Result
-CPU sum 			  :       	  N/A          16.59ms   2139353472
+             GPU Duration   Total Duration   Result
+CPU sum         :           N/A          16.59ms   2139353472
 Reduce Neighbored     :       13.53ms          14.21ms   2139353472
 Reduce Neighbored Less:        7.32ms           7.64ms   2139353472
 Reduce Interleaved    :       11.47ms          11.81ms   2139353472
