@@ -120,7 +120,7 @@ __global__ void SharedMemKernel(float* const d_data) {
 __global__ void IncrementAtomicKernel(int* const d_data, size_t size) {
   unsigned int const idx{blockIdx.x * blockDim.x + threadIdx.x};
 
-  atomicAdd(&d_data[idx % size], 1);  // Use GPU special hardware to perform atomic operation
+  atomicAdd((d_data + (idx % size)), 1);  // Use GPU special hardware to perform atomic operation
 }
 ```
 
