@@ -79,13 +79,13 @@ ___
 __global__ void LocalMemKernel(float const h_in) {
   // Variable "f" is in local memory and private to each thread.
   // Parameters like "h_in" is also in local memory.
-	float const f{h_in};
-	// ...
+  float const f{h_in};
+  // ...
 }
 
 __global__ void GlobalMemKernel(float* const d_data) {
-	// "d_data" is a pointer to global memory on the device.
-	d_data[threadIdx.x] = 2.0f * static_cast<float>(threadIdx.x);
+  // "d_data" is a pointer to global memory on the device.
+  d_data[threadIdx.x] = 2.0f * static_cast<float>(threadIdx.x);
 }
 ```
 
