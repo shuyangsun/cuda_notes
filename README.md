@@ -18,7 +18,7 @@ ___
 * Convert image to BW, taking human eye's color sensitivity into account:
   * I = 0.299f * r + 0.587f * g + 0.114f * b;
 
-## Lesson 3 - GPU Hardware and Parallel Communication Patterns
+## Lesson 2 - GPU Hardware and Parallel Communication Patterns
 
 *The important part of parallel computing is communication between threads.
 
@@ -132,6 +132,24 @@ __global__ void IncrementAtomicKernel(int* const d_data, size_t size) {
 ### Thread Divergence
 
 * Conditions and loops can both cause thread divergence.
+
+
+## Lesson 3 - Fundamental GPU Algorithms
+
+### Steps and Work
+
+* *Step*: the number of layers in process tree.
+* *Work*: the number of nodes in process tree.
+* GPU is *work efficient*.
+
+### Binary and Associative
+
+* An operator is *binary* if it has two operands.
+* An operator is *associative* if the order of operands does not matter.
+
+### Step Complexity of Parallel Reduce
+
+* *Brent's Theorem*: Assume a parallel computer where each processor can perform an arithmetic operation in unit time. Further, assume that the computer has exactly enough processors to exploit the maximum concurrency in an algorithm with N operations, such that T time steps suffice. Brent’s Theorem says that a similar computer with fewer processors, P, can perform the algorithm in time T_p <= (T + (N - T)/P), where P is less than or equal to the number of processors needed to exploit the maximum concurrency in the algorithm. (from [SpringerLink](http://link.springer.com/referenceworkentry/10.1007%2F978-0-387-09766-4_80))
 
 ___
 
