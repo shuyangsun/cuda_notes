@@ -149,7 +149,11 @@ __global__ void IncrementAtomicKernel(int* const d_data, size_t size) {
 
 ### Step Complexity of Parallel Reduce
 
-* *Brent's Theorem*: Assume a parallel computer where each processor can perform an arithmetic operation in unit time. Further, assume that the computer has exactly enough processors to exploit the maximum concurrency in an algorithm with N operations, such that T time steps suffice. Brent’s Theorem says that a similar computer with fewer processors, P, can perform the algorithm in time T_p <= (T + (N - T)/P), where P is less than or equal to the number of processors needed to exploit the maximum concurrency in the algorithm. (from [SpringerLink](http://link.springer.com/referenceworkentry/10.1007%2F978-0-387-09766-4_80))
+* *Brent's Theorem*: Assume a parallel computer where each processor can perform an arithmetic operation in unit time. Further, assume that the computer has exactly enough processors to exploit the maximum concurrency in an algorithm with N operations, such that T time steps suffice. Brent’s Theorem says that a similar computer with fewer processors, P, can perform the algorithm in time T_p <= T + (N - T)/P, where P is less than or equal to the number of processors needed to exploit the maximum concurrency in the algorithm. (from [SpringerLink](http://link.springer.com/referenceworkentry/10.1007%2F978-0-387-09766-4_80))
+
+### Inputs to Scan
+
+* *Identity element* (**I**) for operator (**op**): given operand **x**, assumes **op** is associative and **I** is operator **op**'s *identity element*, then **I op x == x** is **true**.
 
 ___
 
