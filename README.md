@@ -155,6 +155,10 @@ __global__ void IncrementAtomicKernel(int* const d_data, size_t size) {
 
 * *Identity element* (**I**) for operator (**op**): given operand **x**, assumes **op** is associative and **I** is operator **op**'s *identity element*, then **I op x == x** is **true**.
 
+### What Scan Actually Do
+
+* For an array of **N** elements (ele_0 to ele_n-1), the output is also an array with **N** elements. The first element in  is the *identity element* of the particular operand applied to the scan algorithm, then, the **n**th element is the serially applied operand on all preceding elements from the original array (**0** to **n-1** (inclusive)).
+
 ___
 
 # Professional CUDA C Programming
